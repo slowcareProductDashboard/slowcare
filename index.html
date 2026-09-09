@@ -323,6 +323,14 @@ textarea.nm:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-s
   padding:11px;cursor:pointer;font-family:inherit;margin-top:2px}
 .scgs:hover{color:#374151}
 .scgp{font-size:12.5px;color:#6B7280;line-height:1.65;background:#F9FAFB;padding:12px;border-radius:10px}
+.scgrole{display:flex;gap:8px}
+.scgrolebtn{flex:1;border:1.5px solid #E5E7EB;background:#fff;color:#4B5563;font-weight:700;font-size:12.5px;
+  padding:11px 8px;border-radius:10px;cursor:pointer;font-family:inherit;transition:.14s}
+.scgrolebtn:hover{border-color:#CBD2DC}
+.scgrolebtn.on{background:#FFF1EC;border-color:#F0552B;color:#F0552B}
+.scgrole-note{font-size:11px;color:#9CA3AF;margin-top:8px;line-height:1.5}
+.scbadge-view{display:inline-flex;align-items:center;gap:6px;border:1px solid #FDE68A;background:#FFFBEB;
+  color:#B45309;border-radius:999px;padding:6px 12px;font-size:11.5px;font-weight:700;white-space:nowrap}
 @media (max-width:640px){ #scHist{width:100%} }
 
 </style>
@@ -337,6 +345,7 @@ textarea.nm:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-s
     </div>
     <div class="tools">
       <span class="scconn" id="scConn" title="동기화 상태"><i></i>혼자 쓰는 모드</span>
+      <span class="scbadge-view" id="scRoleBadge" style="display:none" title="조회 전용 계정으로 접속 중 — 수정할 수 없습니다">👁 조회 전용</span>
       <span id="scPeers"></span>
       <span class="save" id="saveState" title="변경은 서버에 즉시 저장됩니다"><i></i><b>자동 저장</b><em>대기 중</em></span>
       <button class="btn schbtn" id="scHistBtn" data-act="sc-hist">변경 이력</button>
@@ -661,14 +670,14 @@ function tabEl(kind, id, cls, count, lv, key){
   const on = state.level===lv && state.key===key;
   return `<span class="tab ${cls} ${on?'on':''}" role="button" tabindex="0" data-lv="${lv}" data-k="${key}" data-ren-kind="${kind}" data-ren-id="${id}">
     <span class="tl">${esc(label)}</span><span class="n">${count}</span>
-    <span class="ed" data-act="ren" data-kind="${kind}" data-id="${id}" title="이름 수정 (탭 더블클릭으로도 가능)">✎</span>
+    ${isViewOnly()?'':`<span class="ed" data-act="ren" data-kind="${kind}" data-id="${id}" title="이름 수정 (탭 더블클릭으로도 가능)">✎</span>`}
   </span>`;
 }
 function renderTabs(){
   const p=state.products;
   let h = tabEl('special','all','', p.length, 'major','all');
   h += state.majors.map(m=>tabEl('major', m.id, 'c-'+m.id, p.filter(x=>x.major===m.id).length, 'major', m.id)).join('');
-  h += `<span class="tab addm" role="button" tabindex="0" data-act="maj-add">＋ 대분류 추가</span>`;
+  if(!isViewOnly()) h += `<span class="tab addm" role="button" tabindex="0" data-act="maj-add">＋ 대분류 추가</span>`;
   h += `<span class="spacer"></span>`;
   h += state.planShown
     ? `<button class="tab plan ${state.level==='plan'?'on':''}" data-lv="plan" data-k="plan">＋ 신제품 기획/제안 <span class="n">${PLANS.length}</span></button>`
@@ -677,7 +686,7 @@ function renderTabs(){
 
   let n = state.minors.map(m=>tabEl('minor', m.id, 'c-minor', p.filter(x=>x.minor===m.id).length, 'minor', m.id)).join('');
   n += tabEl('special','none','', p.filter(x=>!x.minor).length, 'minor','none');
-  n += `<span class="tab addm" role="button" tabindex="0" data-act="min-add">＋ 소분류 추가</span>`;
+  if(!isViewOnly()) n += `<span class="tab addm" role="button" tabindex="0" data-act="min-add">＋ 소분류 추가</span>`;
   $('#minorTabs').innerHTML = n;
 
   const inp = document.querySelector('.tin');
@@ -685,12 +694,13 @@ function renderTabs(){
 }
 function slotHTML(p){
   const sel = state.pasteTarget===p.id ? ' sel':'';
-  return `<div class="slot${sel}" data-id="${p.id}" draggable="true">
-    <button class="thumb" data-act="pop" data-id="${p.id}" title="클릭: 편집 / 드래그: 순서·카테고리 이동">
+  const ro = isViewOnly();
+  return `<div class="slot${sel}" data-id="${p.id}" draggable="${ro?'false':'true'}">
+    <button class="thumb" data-act="pop" data-id="${p.id}" title="${ro?'클릭: 상세 보기':'클릭: 편집 / 드래그: 순서·카테고리 이동'}">
       <img src="${p.img}" alt="" draggable="false">
-      <span class="ov"><span>클릭 → 이미지 교체 · 이동</span><span class="k">드래그 → 순서 변경</span></span>
+      <span class="ov"><span>${ro?'클릭 → 상세 보기':'클릭 → 이미지 교체 · 이동'}</span>${ro?'':'<span class="k">드래그 → 순서 변경</span>'}</span>
     </button>
-    <div class="name" contenteditable="plaintext-only" data-id="${p.id}" spellcheck="false" draggable="false">${esc(p.name)}</div>
+    <div class="name" ${ro?'':'contenteditable="plaintext-only"'} data-id="${p.id}" spellcheck="false" draggable="false">${esc(p.name)}</div>
     <div class="chips">
       <span class="chip ${p.major}">${mLabel(p.major)}</span>
       ${p.minor?`<span class="chip minor">${nLabel(p.minor)}</span>`
@@ -719,7 +729,7 @@ function renderContent(){
     ${list.length? `<div class="grid">${list.map(slotHTML).join('')}${addSlot()}</div>`
       : `<div class="empty"><b>아직 이 카테고리에 배치된 제품이 없습니다</b><span>다른 탭에서 제품 썸네일을 클릭 → <b>카테고리 이동</b> 토글로 이곳에 배치하거나, 아래 ＋ 슬롯으로 새 제품을 추가하세요.</span><div class="grid" style="margin-top:16px;max-width:200px;margin-inline:auto;grid-template-columns:1fr">${addSlot()}</div></div>` }`;
 }
-const addSlot = () => `<div class="slot add" data-act="add"><span class="pl">＋</span><span class="t">제품 슬롯 추가</span></div>`;
+const addSlot = () => isViewOnly() ? '' : `<div class="slot add" data-act="add"><span class="pl">＋</span><span class="t">제품 슬롯 추가</span></div>`;
 
 function planHTML(){
   const list = state.areaFilter==='전체' ? PLANS : PLANS.filter(p=>p.area===state.areaFilter);
@@ -774,35 +784,36 @@ function renderPop(){
   if(!state.pop) return;
   const p = byId(state.pop); if(!p){ state.pop=null; return; }
   const anchor = document.querySelector(`.thumb[data-id="${p.id}"]`);
+  const ro = isViewOnly();
   const mask = document.createElement('div'); mask.className='mask'; mask.dataset.act='close';
   const pop = document.createElement('div'); pop.className='pop';
   pop.innerHTML = `
-    <h4><span>슬롯 편집</span><button class="x" data-act="close">✕</button></h4>
-    <div class="grp">
+    <h4><span>${ro?'슬롯 상세':'슬롯 편집'}</span><button class="x" data-act="close">✕</button></h4>
+    ${ro?'':`<div class="grp">
       <div class="lb">썸네일 이미지 교체 <i>Ctrl+V</i></div>
       <div class="pz" id="pz" tabindex="0">
         <div class="k">여기에 Ctrl + V 로 붙여넣기</div>
         <div class="d">클릭하면 파일로도 선택할 수 있습니다</div>
       </div>
-    </div>
+    </div>`}
     <div class="grp">
-      <div class="lb">제품명 <i>수정 · 붙여넣기 가능</i></div>
-      <textarea class="nm" id="nm" rows="3">${esc(p.name)}</textarea>
+      <div class="lb">제품명 ${ro?'':'<i>수정 · 붙여넣기 가능</i>'}</div>
+      <textarea class="nm" id="nm" rows="3" ${ro?'readonly':''}>${esc(p.name)}</textarea>
     </div>
     <div class="grp">
       <div class="lb">카테고리 이동 · 대분류</div>
-      <div class="row">${state.majors.map(m=>`<button class="opt ${m.id} ${p.major===m.id?'on':''}" data-act="mv-major" data-v="${m.id}">${esc(m.label)}</button>`).join('')}</div>
+      <div class="row">${state.majors.map(m=>`<button class="opt ${m.id} ${p.major===m.id?'on':''}" ${ro?'disabled':`data-act="mv-major" data-v="${m.id}"`}>${esc(m.label)}</button>`).join('')}</div>
     </div>
     <div class="grp">
       <div class="lb">카테고리 이동 · 소분류</div>
       <div class="row">
-        ${state.minors.map(m=>`<button class="opt minor ${p.minor===m.id?'on':''}" data-act="mv-minor" data-v="${m.id}">${esc(m.label)}</button>`).join('')}
-        <button class="opt ${!p.minor?'on':''}" data-act="mv-minor" data-v="">${esc(tabLabel('special','none'))}</button>
+        ${state.minors.map(m=>`<button class="opt minor ${p.minor===m.id?'on':''}" ${ro?'disabled':`data-act="mv-minor" data-v="${m.id}"`}>${esc(m.label)}</button>`).join('')}
+        <button class="opt ${!p.minor?'on':''}" ${ro?'disabled':'data-act="mv-minor" data-v=""'}>${esc(tabLabel('special','none'))}</button>
       </div>
     </div>
     <div class="pop-foot">
-      <button class="btn" data-act="park" data-id="${p.id}">보관함에 넣기</button>
-      <button class="btn ghost-danger" data-act="del" data-id="${p.id}">슬롯 삭제</button>
+      ${ro?'':`<button class="btn" data-act="park" data-id="${p.id}">보관함에 넣기</button>
+      <button class="btn ghost-danger" data-act="del" data-id="${p.id}">슬롯 삭제</button>`}
       <button class="btn primary" data-act="close">완료</button>
     </div>`;
   document.body.appendChild(mask); document.body.appendChild(pop);
@@ -826,18 +837,23 @@ function renderPop(){
   pop.style.left = L+'px'; pop.style.top = T+'px';
 
   state.pasteTarget = p.id;
-  const pz = pop.querySelector('#pz'); pz.focus();
-  pz.addEventListener('click', ()=>{ pendingImgTarget = p.id; $('#fileImg').click(); });
+  const pz = pop.querySelector('#pz');
+  if(pz){
+    pz.focus();
+    pz.addEventListener('click', ()=>{ pendingImgTarget = p.id; $('#fileImg').click(); });
+  }
   const nm = pop.querySelector('#nm');
-  let nameT=null;
-  nm.addEventListener('input', ()=>{
-    p.name = nm.value;
-    const n=document.querySelector(`.name[data-id="${p.id}"]`); if(n) n.textContent = nm.value;
-    const val = nm.value;
-    clearTimeout(nameT);
-    nameT=setTimeout(()=>emit({t:'name', pid:p.id, name:val}, {noRender:true, replaceLast:true}), 500);
-  });
-  nm.addEventListener('blur', ()=>{ clearTimeout(nameT); emit({t:'name', pid:p.id, name:nm.value}, {noRender:true, replaceLast:true}); });
+  if(nm && !ro){
+    let nameT=null;
+    nm.addEventListener('input', ()=>{
+      p.name = nm.value;
+      const n=document.querySelector(`.name[data-id="${p.id}"]`); if(n) n.textContent = nm.value;
+      const val = nm.value;
+      clearTimeout(nameT);
+      nameT=setTimeout(()=>emit({t:'name', pid:p.id, name:val}, {noRender:true, replaceLast:true}), 500);
+    });
+    nm.addEventListener('blur', ()=>{ clearTimeout(nameT); emit({t:'name', pid:p.id, name:nm.value}, {noRender:true, replaceLast:true}); });
+  }
 }
 let pendingImgTarget = null;
 
@@ -1323,7 +1339,7 @@ var COLORS = ['#F0552B','#2563EB','#0E9F6E','#8B5CF6','#D97706','#DB2777','#0891
 var SC = {
   on:false, mode:'solo', conn:'off', seq:0, snapSeq:0,
   me:{id:null, name:'', color:0},
-  pass:'', title:'',
+  pass:'', title:'', role:'edit',
   peers:[], hist:[], base:null,
   queue:[], sending:false, pulling:false,
   ws:null, wsRef:0, wsOK:false, wsTimer:null, hbTimer:null,
@@ -1535,8 +1551,14 @@ function newMajorId(){ return 'jx'+SC.me.id+'-'+(++nseq); }
 /* =====================================================================
    변경 내보내기
    ===================================================================== */
+function isViewOnly(){ return typeof SC!=='undefined' && SC.on && SC.role==='view'; }
 function emit(op, opt){
   opt = opt||{};
+  if(isViewOnly()){
+    toast('조회 전용 모드입니다. 수정할 수 없습니다.');
+    if(!opt.noRender) render();
+    return;
+  }
   if(!opt.skipUndo) pushUndo();
   apply(op, state);
   if(SC.on){
@@ -1587,6 +1609,7 @@ function reauth(){
 }
 function flush(){
   if(!SC.on || SC.sending || !SC.queue.length) return;
+  if(SC.role==='view'){ SC.queue=[]; saveQueue(); return; }   // 조회 전용 계정은 서버에 저장을 시도하지 않습니다
   /* 서버가 받았다고 확인해 줄 때까지 큐에서 지우지 않습니다.
      모든 op 는 id 기준이라 혹시 두 번 전송돼도 결과가 달라지지 않습니다. */
   var batch = SC.queue.slice(); SC.sending=true;
@@ -1826,7 +1849,7 @@ function renderHist(){
       +'<span class="scdot" style="background:'+(mine?myColor():peerColor(h.color||0))+'"></span>'
       +'<div class="schb"><div class="scht">'+opText(h.op)+'</div>'
       +'<div class="schm">'+esc(h.name||(mine?(SC.me.name||'나'):'익명'))+' · '+t+(h.pend?' · 저장 중':'')+'</div></div>'
-      +(h.pend?'':'<button class="schb2" data-act="sc-revert" data-seq="'+h.seq+'">이 시점으로</button>')
+      +(h.pend||isViewOnly()?'':'<button class="schb2" data-act="sc-revert" data-seq="'+h.seq+'">이 시점으로</button>')
       +'</div>';
   }).join('');
   el.querySelector('.schlist').innerHTML = rows || (SC.on
@@ -1865,7 +1888,13 @@ function gate(){
    '<div class="scg">'
    + '<div class="scgh"><b>슬로우케어 라인업</b><span>'+(configured?'팀 공동 편집':'접속 설정')+'</span></div>'
    + (configured
-      ? '<label class="scgl">이름 <i>다른 사람에게 표시됩니다</i></label>'
+      ? '<label class="scgl" style="margin-top:0">접속 구분</label>'
+        +'<div class="scgrole">'
+          +'<button type="button" class="scgrolebtn on" id="scgRoleEdit" data-role="edit">기획1팀 전용</button>'
+          +'<button type="button" class="scgrolebtn" id="scgRoleView" data-role="view">타팀 전용</button>'
+        +'</div>'
+        +'<div class="scgrole-note" id="scgRoleNote">기획1팀 전용은 자유롭게 수정할 수 있습니다.</div>'
+        +'<label class="scgl">이름 <i>다른 사람에게 표시됩니다</i></label>'
         +'<input id="scgName" class="scgi" maxlength="12" placeholder="예: 이현명" value="'+esc(SC.me.name)+'">'
         +'<label class="scgl">공용 비밀번호</label>'
         +'<input id="scgPass" class="scgi" type="password" placeholder="팀에 공유된 비밀번호" value="'+esc(rememberedPass())+'">'
@@ -1889,6 +1918,15 @@ function gate(){
   if($g('scgSolo')) $g('scgSolo').onclick=function(){ box.classList.remove('open'); soloMode(); };
 
   if(configured){
+    var roleNotes = {edit:'기획1팀 전용은 자유롭게 수정할 수 있습니다.', view:'타팀 전용은 내용을 볼 수만 있고 수정할 수 없습니다.'};
+    [$g('scgRoleEdit'),$g('scgRoleView')].forEach(function(b){
+      b.onclick=function(){
+        [$g('scgRoleEdit'),$g('scgRoleView')].forEach(function(x){ x.classList.toggle('on', x===b); });
+        $g('scgRoleNote').textContent = roleNotes[b.dataset.role];
+        $g('scgPass').placeholder = b.dataset.role==='view' ? '타팀 전용 비밀번호' : '기획1팀 전용 비밀번호';
+        $g('scgPass').focus();
+      };
+    });
     var go=function(){
       var nm=$g('scgName').value.trim(), pw=$g('scgPass').value;
       if(!nm){ $g('scgErr').textContent='이름을 입력해 주세요.'; $g('scgName').focus(); return; }
@@ -1924,7 +1962,7 @@ function rememberedPass(){ try{ return localStorage.getItem('sc-pass-'+BOARD)||s
 function join(pw, remember){
   return rpc('sc_join', {p_board:BOARD, p_pass:pw, p_actor:SC.me.id, p_name:SC.me.name||'익명'})
     .then(function(r){
-      SC.pass=pw; SC.on=true; SC.mode='sync'; SC.title=r.title||'';
+      SC.pass=pw; SC.on=true; SC.mode='sync'; SC.title=r.title||''; SC.role=r.role||'edit';
       try{
         if(remember) localStorage.setItem('sc-pass-'+BOARD, pw);
         else { localStorage.removeItem('sc-pass-'+BOARD); sessionStorage.setItem('sc-pass-'+BOARD, pw); }
@@ -1954,9 +1992,9 @@ function join(pw, remember){
         scheduleFlush();
       }
 
-      /* 이전에 못 보낸 변경이 보관돼 있으면 이어서 올립니다 */
+      /* 이전에 못 보낸 변경이 보관돼 있으면 이어서 올립니다 (조회 전용 로그인에서는 보류) */
       SC.reauthing = false;
-      var kept = loadQueue();
+      var kept = SC.role==='view' ? [] : loadQueue();
       if(kept.length){
         var have = {};
         SC.queue.forEach(function(q){ have[JSON.stringify(q)]=1; });
@@ -1969,20 +2007,24 @@ function join(pw, remember){
 
       document.body.classList.add('sc-live');
       var hb=document.getElementById('scHistBtn'); if(hb) hb.style.display='';
+      var rb=document.getElementById('scRoleBadge'); if(rb) rb.style.display = SC.role==='view' ? '' : 'none';
       render(); renderPeers(); setConn('on');
       maybeCompact();
       wsConnect(); startPoll(); beat();
       beatT=setInterval(beat, 3000);
       setInterval(function(){ if(SC.on && !SC.wsOK) pull(); }, 2000);
-      toast('<b>'+esc(SC.me.name)+'</b>님으로 입장했습니다. 이제 변경이 모두에게 실시간으로 반영됩니다.', true);
+      toast(SC.role==='view'
+        ? '<b>'+esc(SC.me.name)+'</b>님으로 입장했습니다. <b>조회 전용</b> 모드라 수정은 할 수 없습니다.'
+        : '<b>'+esc(SC.me.name)+'</b>님으로 입장했습니다. 이제 변경이 모두에게 실시간으로 반영됩니다.', true);
       setSaveUI('', '서버 동기화');
     });
 }
 function soloMode(){
-  SC.on=false; SC.mode='solo'; setConn('off', true);
+  SC.on=false; SC.mode='solo'; SC.role='edit'; setConn('off', true);
   document.body.classList.remove('sc-live');
   var hb=document.getElementById('scHistBtn'); if(hb) hb.style.display='none';
   var pv=document.getElementById('scPeers'); if(pv) pv.innerHTML='';
+  var rb=document.getElementById('scRoleBadge'); if(rb) rb.style.display='none';
   restore(); render(); save(true);
 }
 window.addEventListener('beforeunload', function(e){
