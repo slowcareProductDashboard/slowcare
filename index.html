@@ -664,11 +664,13 @@ function tabEl(kind, id, cls, count, lv, key){
   const editing = state.editTab && state.editTab.kind===kind && state.editTab.id===id;
   const label = tabLabel(kind,id);
   if(editing){
-    const custom = kind==='minor' && String(id).indexOf('mx')===0;
+    const canDelMinor = kind==='minor';
+    const canDelMajor = kind==='major' && state.majors.length>1;
     return `<span class="tab edit ${cls}">
       <input class="tin" data-kind="${kind}" data-id="${id}" value="${esc(label)}" maxlength="24" spellcheck="false">
       <button class="tk" data-act="ren-ok" title="확인">✓</button>
-      ${custom?`<button class="tk del" data-act="min-del" data-id="${id}" title="이 소분류 삭제">✕</button>`:''}
+      ${canDelMinor?`<button class="tk del" data-act="min-del" data-id="${id}" title="이 소분류 삭제">✕</button>`:''}
+      ${canDelMajor?`<button class="tk del" data-act="maj-del" data-id="${id}" title="이 대분류 삭제">✕</button>`:''}
     </span>`;
   }
   const on = state.level===lv && state.key===key;
@@ -978,6 +980,17 @@ document.addEventListener('click', e=>{
       state.editTab=null;
       if(state.level==='minor' && state.key===id) state.key='none';
       render(); toast('소분류를 삭제했습니다.'); break;
+    }
+    case 'maj-del': {
+      const id=t.dataset.id, m=state.majors.find(x=>x.id===id); if(!m) break;
+      if(state.majors.length<=1){ toast('대분류는 최소 1개 있어야 합니다.'); break; }
+      const cnt=state.products.filter(x=>x.major===id).length;
+      const fb=state.majors.find(x=>x.id!==id);
+      if(cnt && !window.confirm(`"${m.label}" 대분류를 삭제하면 소속 제품 ${cnt}개가 "${fb.label}"(으)로 이동합니다. 계속할까요?`)) break;
+      emit({t:'maj-del', id:id}, {noRender:true});
+      state.editTab=null;
+      if(state.level==='major' && state.key===id) state.key='all';
+      render(); toast('대분류를 삭제했습니다.'); break;
     }
     case 'mv-major': { const p=byId(state.pop); if(p){ const v=t.dataset.v;
                        emit({t:'mv', pid:p.id, major:v}, {noRender:true});
@@ -1435,6 +1448,14 @@ function apply(op, d){
       d.minors = d.minors.filter(function(x){ return x.id!==op.id; });
       break;
     }
+    case 'maj-del': {
+      if(d.majors.length<=1) break;
+      var fb = d.majors.find(function(x){ return x.id!==op.id; });
+      if(!fb) break;
+      d.products.forEach(function(x){ if(x.major===op.id) x.major = fb.id; });
+      d.majors = d.majors.filter(function(x){ return x.id!==op.id; });
+      break;
+    }
     case 'adopt': {
       if(d.adopted[op.planId]) break;
       if(!find(op.p.id)) d.products.push(clone(op.p));
@@ -1697,6 +1718,7 @@ function opText(op){
     case 'min-add': return '소분류 「'+esc(op.label)+'」 추가';
     case 'maj-add': return '대분류 「'+esc(op.label)+'」 추가';
     case 'min-del': return '소분류 삭제';
+    case 'maj-del': return '대분류 삭제';
     case 'adopt':   return '기획안 「'+esc(String(op.p&&op.p.name||'').replace(/\n/g,' ').slice(0,18))+'」 채택';
     case 'reset':   return '전체 초기화';
     case 'snap':    return op.why||'상태 되돌리기';
