@@ -2008,6 +2008,8 @@ function join(pw, remember){
       document.body.classList.add('sc-live');
       var hb=document.getElementById('scHistBtn'); if(hb) hb.style.display='';
       var rb=document.getElementById('scRoleBadge'); if(rb) rb.style.display = SC.role==='view' ? '' : 'none';
+      var bz=document.getElementById('bankZone'); if(bz) bz.style.display = SC.role==='view' ? 'none' : '';
+      var sbz=document.getElementById('slotBankZone'); if(sbz) sbz.style.display = SC.role==='view' ? 'none' : '';
       render(); renderPeers(); setConn('on');
       maybeCompact();
       wsConnect(); startPoll(); beat();
@@ -2025,6 +2027,8 @@ function soloMode(){
   var hb=document.getElementById('scHistBtn'); if(hb) hb.style.display='none';
   var pv=document.getElementById('scPeers'); if(pv) pv.innerHTML='';
   var rb=document.getElementById('scRoleBadge'); if(rb) rb.style.display='none';
+  var bz=document.getElementById('bankZone'); if(bz) bz.style.display='';
+  var sbz=document.getElementById('slotBankZone'); if(sbz) sbz.style.display='';
   restore(); render(); save(true);
 }
 window.addEventListener('beforeunload', function(e){
