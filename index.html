@@ -28,7 +28,7 @@ body{
 .head{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:20px}
 .brand{display:flex;flex-direction:column;align-items:flex-start;gap:7px}
 .brand-logo{height:26px;width:auto;display:block}
-h1{margin:0;font-size:21px;letter-spacing:-.4px;font-weight:800}
+h1{margin:0;font-size:15px;letter-spacing:-.2px;font-weight:800}
 .sub{margin:0;font-size:12.5px;color:var(--ink-3)}
 .tools{display:flex;gap:8px;flex-wrap:wrap}
 .btn{border:1px solid var(--line);background:#fff;color:var(--ink-2);padding:8px 13px;border-radius:10px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:.14s}
@@ -409,7 +409,8 @@ const IMG = ["data:image/webp;base64,UklGRpgGAABXRUJQVlA4IIwGAAAQNQCdASoAAQABPj0
 const DEF_MAJORS = [
   {id:'wash',    label:'의류 세탁'},
   {id:'protect', label:'의류 보호'},
-  {id:'store',   label:'수납 공간 확보'}
+  {id:'store',   label:'수납 공간 확보'},
+  {id:'aux',     label:'세탁 보조'}
 ];
 const DEF_MINORS = [
   {id:'padding', label:'패딩 케어'},
@@ -667,6 +668,7 @@ function renderTabs(){
   const p=state.products;
   let h = tabEl('special','all','', p.length, 'major','all');
   h += state.majors.map(m=>tabEl('major', m.id, 'c-'+m.id, p.filter(x=>x.major===m.id).length, 'major', m.id)).join('');
+  h += `<span class="tab addm" role="button" tabindex="0" data-act="maj-add">＋ 대분류 추가</span>`;
   h += `<span class="spacer"></span>`;
   h += state.planShown
     ? `<button class="tab plan ${state.level==='plan'?'on':''}" data-lv="plan" data-k="plan">＋ 신제품 기획/제안 <span class="n">${PLANS.length}</span></button>`
@@ -939,6 +941,14 @@ document.addEventListener('click', e=>{
       state.level='minor'; state.key=nm.id; state.planShown=true;
       state.editTab={kind:'minor', id:nm.id};
       render(); toast('소분류를 추가했습니다. 이름을 입력하세요.', true); break;
+    }
+    case 'maj-add': {
+      let k=1; while(state.majors.some(m=>m.label==='새 대분류 '+k)) k++;
+      const jm = {id:newMajorId(), label:'새 대분류 '+k};
+      emit({t:'maj-add', id:jm.id, label:jm.label}, {noRender:true});
+      state.level='major'; state.key=jm.id; state.planShown=true;
+      state.editTab={kind:'major', id:jm.id};
+      render(); toast('대분류를 추가했습니다. 이름을 입력하세요.', true); break;
     }
     case 'min-del': {
       const id=t.dataset.id, m=state.minors.find(x=>x.id===id); if(!m) break;
@@ -1399,6 +1409,7 @@ function apply(op, d){
       break;
     }
     case 'min-add': { if(!d.minors.some(function(m){return m.id===op.id;})) d.minors.push({id:op.id,label:op.label}); break; }
+    case 'maj-add': { if(!d.majors.some(function(m){return m.id===op.id;})) d.majors.push({id:op.id,label:op.label}); break; }
     case 'min-del': {
       d.products.forEach(function(x){ if(x.minor===op.id) x.minor=null; });
       d.minors = d.minors.filter(function(x){ return x.id!==op.id; });
@@ -1519,6 +1530,7 @@ function docAt(seq){
 var nseq = 0;
 function newPid(){ return 'n'+SC.me.id+'-'+(++nseq); }
 function newMinorId(){ return 'mx'+SC.me.id+'-'+(++nseq); }
+function newMajorId(){ return 'jx'+SC.me.id+'-'+(++nseq); }
 
 /* =====================================================================
    변경 내보내기
@@ -1656,6 +1668,7 @@ function opText(op){
     case 'del':     return '슬롯 삭제';
     case 'tab':     return '탭 이름을 「'+esc(op.label)+'」로 변경';
     case 'min-add': return '소분류 「'+esc(op.label)+'」 추가';
+    case 'maj-add': return '대분류 「'+esc(op.label)+'」 추가';
     case 'min-del': return '소분류 삭제';
     case 'adopt':   return '기획안 「'+esc(String(op.p&&op.p.name||'').replace(/\n/g,' ').slice(0,18))+'」 채택';
     case 'reset':   return '전체 초기화';
