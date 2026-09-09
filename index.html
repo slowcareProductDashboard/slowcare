@@ -429,6 +429,9 @@ const DEF_MINORS = [
   {id:'clean',   label:'클린 케어'}
 ];
 const DEF_SPECIAL = {all:'전체', none:'미지정'};
+const BLANK_NAME = '새 제품명 입력\n(설명형 네이밍)';
+/* 조회 전용(타팀) 화면에는 아직 이름도 채우지 않은 빈 슬롯을 보여주지 않습니다 */
+function teamProducts(){ return isViewOnly() ? state.products.filter(p=>p.name!==BLANK_NAME) : state.products; }
 const clone = o => JSON.parse(JSON.stringify(o));
 const mLabel = id => (state.majors.find(m=>m.id===id)||{}).label || '미지정';
 const nLabel = id => (state.minors.find(m=>m.id===id)||{}).label || '';
@@ -637,8 +640,9 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const byId = id => state.products.find(p=>p.id===id);
 function visible(){
-  if(state.level==='major') return state.key==='all' ? state.products : state.products.filter(p=>p.major===state.key);
-  if(state.level==='minor') return state.key==='none' ? state.products.filter(p=>!p.minor) : state.products.filter(p=>p.minor===state.key);
+  const list = teamProducts();
+  if(state.level==='major') return state.key==='all' ? list : list.filter(p=>p.major===state.key);
+  if(state.level==='minor') return state.key==='none' ? list.filter(p=>!p.minor) : list.filter(p=>p.minor===state.key);
   return [];
 }
 function toast(msg, ok){
@@ -649,7 +653,7 @@ function toast(msg, ok){
 
 /* ============================ RENDER ============================ */
 function renderStats(){
-  const p=state.products;
+  const p=teamProducts();
   const kc = {wash:'k-wash', protect:'k-protect', store:'k-store'};
   const rows=[['총 제품 슬롯', p.length, '']]
     .concat(state.majors.map(m=>[m.label, p.filter(x=>x.major===m.id).length, kc[m.id]||'']))
@@ -674,7 +678,7 @@ function tabEl(kind, id, cls, count, lv, key){
   </span>`;
 }
 function renderTabs(){
-  const p=state.products;
+  const p=teamProducts();
   let h = tabEl('special','all','', p.length, 'major','all');
   h += state.majors.map(m=>tabEl('major', m.id, 'c-'+m.id, p.filter(x=>x.major===m.id).length, 'major', m.id)).join('');
   if(!isViewOnly()) h += `<span class="tab addm" role="button" tabindex="0" data-act="maj-add">＋ 대분류 추가</span>`;
@@ -904,7 +908,7 @@ function adopt(planId){
 function addProduct(){
   const major = state.level==='major' && state.key!=='all' ? state.key : (state.level==='minor'? 'wash' : 'wash');
   const minor = state.level==='minor' && state.key!=='none' ? state.key : null;
-  const np = {id:newPid(), name:'새 제품명 입력\n(설명형 네이밍)', major, minor, img:ph('＋', state.products.length), isNew:true, note:''};
+  const np = {id:newPid(), name:BLANK_NAME, major, minor, img:ph('＋', state.products.length), isNew:true, note:''};
   emit({t:'add', p:np}, {noRender:true});
   state.pop = np.id; state.pasteTarget = np.id;
   render();
