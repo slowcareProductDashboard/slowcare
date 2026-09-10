@@ -685,9 +685,11 @@ function renderTabs(){
   h += state.majors.map(m=>tabEl('major', m.id, 'c-'+m.id, p.filter(x=>x.major===m.id).length, 'major', m.id)).join('');
   if(!isViewOnly()) h += `<span class="tab addm" role="button" tabindex="0" data-act="maj-add">＋ 대분류 추가</span>`;
   h += `<span class="spacer"></span>`;
-  h += state.planShown
-    ? `<button class="tab plan ${state.level==='plan'?'on':''}" data-lv="plan" data-k="plan">＋ 신제품 기획/제안 <span class="n">${PLANS.length}</span></button>`
-    : `<span class="bar-hint">대분류 또는 소분류 탭을 선택하면 <b>[＋ 신제품 기획/제안]</b> 탭이 추가로 나타납니다</span>`;
+  if(!isViewOnly()){
+    h += state.planShown
+      ? `<button class="tab plan ${state.level==='plan'?'on':''}" data-lv="plan" data-k="plan">＋ 신제품 기획/제안 <span class="n">${PLANS.length}</span></button>`
+      : `<span class="bar-hint">대분류 또는 소분류 탭을 선택하면 <b>[＋ 신제품 기획/제안]</b> 탭이 추가로 나타납니다</span>`;
+  }
   $('#majorTabs').innerHTML = h;
 
   let n = state.minors.map(m=>tabEl('minor', m.id, 'c-minor', p.filter(x=>x.minor===m.id).length, 'minor', m.id)).join('');
@@ -2009,6 +2011,7 @@ function join(pw, remember){
       state.majors=d.majors; state.minors=d.minors; state.special=d.special;
       state.parked=d.parked||[]; state.imgBank=d.imgBank||[];
       state.pop=null; state.editTab=null;
+      if(SC.role==='view' && state.level==='plan'){ state.level='major'; state.key='all'; }
 
       /* 서버가 완전히 빈 보드면 내 초기 라인업을 한 번 올려 기준을 만든다 */
       if(!r.snap && !(r.ops||[]).length){
