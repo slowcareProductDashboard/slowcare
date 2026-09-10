@@ -145,6 +145,7 @@ body.hide-chips .chips{display:none}
 .opt.on.minor{background:var(--accent);border-color:var(--accent)}
 textarea.nm{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px;font-family:inherit;font-size:12.5px;line-height:1.45;resize:vertical;min-height:58px;outline:none;color:var(--ink)}
 textarea.nm:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.ro-text{width:100%;box-sizing:border-box;background:var(--line-2);border-radius:10px;padding:9px;font-size:12.5px;line-height:1.45;color:var(--ink-2);white-space:pre-wrap;cursor:default}
 .pop-foot{display:flex;gap:6px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line-2)}
 .pop-foot .btn{flex:1;text-align:center;font-size:12px;padding:9px}
 
@@ -359,7 +360,7 @@ textarea.nm:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-s
   <div class="bar">
     <div class="bar-top">
       <span class="bar-label">대분류</span>
-      <span class="bar-hint">탭 선택 → 슬롯 표시 · 탭의 <b>✎</b> 또는 <b>더블클릭</b> → 이름 수정</span>
+      <span class="bar-hint" id="majorBarHint">탭 선택 → 슬롯 표시 · 탭의 <b>✎</b> 또는 <b>더블클릭</b> → 이름 수정</span>
     </div>
     <div class="tabs" id="majorTabs"></div>
   </div>
@@ -367,7 +368,7 @@ textarea.nm:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-s
   <div class="bar">
     <div class="bar-top">
       <span class="bar-label">의류별 케어</span>
-      <span class="bar-hint">슬롯을 <b>탭 위로 드래그</b> → 즉시 편입 · 탭 <b>✎ / 더블클릭</b> → 이름 수정 · <b>＋ 소분류 추가</b>로 새 축 생성</span>
+      <span class="bar-hint" id="minorBarHint">슬롯을 <b>탭 위로 드래그</b> → 즉시 편입 · 탭 <b>✎ / 더블클릭</b> → 이름 수정 · <b>＋ 소분류 추가</b>로 새 축 생성</span>
     </div>
     <div class="tabs" id="minorTabs"></div>
   </div>
@@ -724,9 +725,11 @@ function renderContent(){
   const title = state.level==='major'
     ? (state.key==='all' ? 'All Products' : mLabel(state.key))
     : (state.key==='none' ? '소분류 미지정' : nLabel(state.key));
-  const desc = state.level==='major'
-    ? '클릭 → 이미지 교체(Ctrl+V)·제품명 수정 · <b>드래그 → 순서 변경</b> · 탭 위로 드래그 → 카테고리 이동'
-    : '<b>드래그로 순서 변경</b> · 다른 탭의 슬롯을 이 탭 위로 끌어다 놓으면 바로 편입됩니다.';
+  const desc = isViewOnly()
+    ? '클릭하면 제품 상세 정보를 볼 수 있습니다'
+    : state.level==='major'
+      ? '클릭 → 이미지 교체(Ctrl+V)·제품명 수정 · <b>드래그 → 순서 변경</b> · 탭 위로 드래그 → 카테고리 이동'
+      : '<b>드래그로 순서 변경</b> · 다른 탭의 슬롯을 이 탭 위로 끌어다 놓으면 바로 편입됩니다.';
   c.innerHTML = `
     <div class="sec-head">
       <div class="sec-title">${esc(title)} <span class="pill">${list.length}개 슬롯</span>
@@ -795,33 +798,49 @@ function renderPop(){
   const ro = isViewOnly();
   const mask = document.createElement('div'); mask.className='mask'; mask.dataset.act='close';
   const pop = document.createElement('div'); pop.className='pop';
-  pop.innerHTML = `
-    <h4><span>${ro?'슬롯 상세':'슬롯 편집'}</span><button class="x" data-act="close">✕</button></h4>
-    ${ro?'':`<div class="grp">
+  pop.innerHTML = ro ? `
+    <h4><span>제품 정보</span><button class="x" data-act="close">✕</button></h4>
+    <div class="grp">
+      <div class="lb">제품명</div>
+      <div class="ro-text">${esc(p.name)}</div>
+    </div>
+    <div class="grp">
+      <div class="lb">대분류</div>
+      <div class="row"><span class="chip ${p.major}">${mLabel(p.major)}</span></div>
+    </div>
+    <div class="grp">
+      <div class="lb">소분류</div>
+      <div class="row">${p.minor?`<span class="chip minor">${nLabel(p.minor)}</span>`:`<span class="chip none">${esc(tabLabel('special','none'))}</span>`}</div>
+    </div>
+    <div class="pop-foot">
+      <button class="btn primary" data-act="close">완료</button>
+    </div>` : `
+    <h4><span>슬롯 편집</span><button class="x" data-act="close">✕</button></h4>
+    <div class="grp">
       <div class="lb">썸네일 이미지 교체 <i>Ctrl+V</i></div>
       <div class="pz" id="pz" tabindex="0">
         <div class="k">여기에 Ctrl + V 로 붙여넣기</div>
         <div class="d">클릭하면 파일로도 선택할 수 있습니다</div>
       </div>
-    </div>`}
+    </div>
     <div class="grp">
-      <div class="lb">제품명 ${ro?'':'<i>수정 · 붙여넣기 가능</i>'}</div>
-      <textarea class="nm" id="nm" rows="3" ${ro?'readonly':''}>${esc(p.name)}</textarea>
+      <div class="lb">제품명 <i>수정 · 붙여넣기 가능</i></div>
+      <textarea class="nm" id="nm" rows="3">${esc(p.name)}</textarea>
     </div>
     <div class="grp">
       <div class="lb">카테고리 이동 · 대분류</div>
-      <div class="row">${state.majors.map(m=>`<button class="opt ${m.id} ${p.major===m.id?'on':''}" ${ro?'disabled':`data-act="mv-major" data-v="${m.id}"`}>${esc(m.label)}</button>`).join('')}</div>
+      <div class="row">${state.majors.map(m=>`<button class="opt ${m.id} ${p.major===m.id?'on':''}" data-act="mv-major" data-v="${m.id}">${esc(m.label)}</button>`).join('')}</div>
     </div>
     <div class="grp">
       <div class="lb">카테고리 이동 · 소분류</div>
       <div class="row">
-        ${state.minors.map(m=>`<button class="opt minor ${p.minor===m.id?'on':''}" ${ro?'disabled':`data-act="mv-minor" data-v="${m.id}"`}>${esc(m.label)}</button>`).join('')}
-        <button class="opt ${!p.minor?'on':''}" ${ro?'disabled':'data-act="mv-minor" data-v=""'}>${esc(tabLabel('special','none'))}</button>
+        ${state.minors.map(m=>`<button class="opt minor ${p.minor===m.id?'on':''}" data-act="mv-minor" data-v="${m.id}">${esc(m.label)}</button>`).join('')}
+        <button class="opt ${!p.minor?'on':''}" data-act="mv-minor" data-v="">${esc(tabLabel('special','none'))}</button>
       </div>
     </div>
     <div class="pop-foot">
-      ${ro?'':`<button class="btn" data-act="park" data-id="${p.id}">보관함에 넣기</button>
-      <button class="btn ghost-danger" data-act="del" data-id="${p.id}">슬롯 삭제</button>`}
+      <button class="btn" data-act="park" data-id="${p.id}">보관함에 넣기</button>
+      <button class="btn ghost-danger" data-act="del" data-id="${p.id}">슬롯 삭제</button>
       <button class="btn primary" data-act="close">완료</button>
     </div>`;
   document.body.appendChild(mask); document.body.appendChild(pop);
@@ -1579,6 +1598,17 @@ function newMajorId(){ return 'jx'+SC.me.id+'-'+(++nseq); }
    변경 내보내기
    ===================================================================== */
 function isViewOnly(){ return typeof SC!=='undefined' && SC.on && SC.role==='view'; }
+/* 조회 전용 계정에게는 편집 기능이 있는 것처럼 보이는 안내문구도 함께 감춥니다 */
+function applyRoleChrome(){
+  const ro = isViewOnly();
+  const rb=document.getElementById('scRoleBadge'); if(rb) rb.style.display = ro ? '' : 'none';
+  const bz=document.getElementById('bankZone'); if(bz) bz.style.display = ro ? 'none' : '';
+  const sbz=document.getElementById('slotBankZone'); if(sbz) sbz.style.display = ro ? 'none' : '';
+  const mh=document.getElementById('majorBarHint');
+  if(mh) mh.innerHTML = ro ? '탭을 선택하면 소속 슬롯이 표시됩니다' : '탭 선택 → 슬롯 표시 · 탭의 <b>✎</b> 또는 <b>더블클릭</b> → 이름 수정';
+  const nh=document.getElementById('minorBarHint');
+  if(nh) nh.innerHTML = ro ? '탭을 선택하면 소속 슬롯이 표시됩니다' : '슬롯을 <b>탭 위로 드래그</b> → 즉시 편입 · 탭 <b>✎ / 더블클릭</b> → 이름 수정 · <b>＋ 소분류 추가</b>로 새 축 생성';
+}
 function emit(op, opt){
   opt = opt||{};
   if(isViewOnly()){
@@ -2036,9 +2066,7 @@ function join(pw, remember){
 
       document.body.classList.add('sc-live');
       var hb=document.getElementById('scHistBtn'); if(hb) hb.style.display='';
-      var rb=document.getElementById('scRoleBadge'); if(rb) rb.style.display = SC.role==='view' ? '' : 'none';
-      var bz=document.getElementById('bankZone'); if(bz) bz.style.display = SC.role==='view' ? 'none' : '';
-      var sbz=document.getElementById('slotBankZone'); if(sbz) sbz.style.display = SC.role==='view' ? 'none' : '';
+      applyRoleChrome();
       render(); renderPeers(); setConn('on');
       maybeCompact();
       wsConnect(); startPoll(); beat();
@@ -2055,9 +2083,7 @@ function soloMode(){
   document.body.classList.remove('sc-live');
   var hb=document.getElementById('scHistBtn'); if(hb) hb.style.display='none';
   var pv=document.getElementById('scPeers'); if(pv) pv.innerHTML='';
-  var rb=document.getElementById('scRoleBadge'); if(rb) rb.style.display='none';
-  var bz=document.getElementById('bankZone'); if(bz) bz.style.display='';
-  var sbz=document.getElementById('slotBankZone'); if(sbz) sbz.style.display='';
+  applyRoleChrome();
   restore(); render(); save(true);
 }
 window.addEventListener('beforeunload', function(e){
