@@ -9,7 +9,7 @@
 :root{
   --accent:#F0552B; --accent-soft:#FFF1EC; --accent-line:#FFD3C4;
   --ink:#14181D; --ink-2:#4B5563; --ink-3:#8A939E;
-  --line:#E7E9EE; --line-2:#F1F3F6; --bg:#F7F8FA; --card:#FFFFFF;
+  --line:#E7E9EE; --line-2:#F1F3F6; --bg:#FFFFFF; --card:#FFFFFF;
   --wash:#2563EB; --wash-soft:#EEF3FF;
   --protect:#0E9F6E; --protect-soft:#EAF8F2;
   --store:#8B5CF6; --store-soft:#F3EEFF;
@@ -26,11 +26,10 @@ body{
 
 /* ---------- header ---------- */
 .head{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:20px}
-.brand{display:flex;align-items:center;gap:11px}
-.dot{width:30px;height:30px;border-radius:9px;background:var(--accent);position:relative;flex:none}
-.dot::after{content:"";position:absolute;inset:0;margin:auto;width:11px;height:11px;border-radius:50%;background:#fff}
-h1{margin:0;font-size:21px;letter-spacing:-.4px;font-weight:800}
-.sub{margin:3px 0 0;font-size:12.5px;color:var(--ink-3)}
+.brand{display:flex;flex-direction:column;align-items:flex-start;gap:7px}
+.brand-logo{height:26px;width:auto;display:block}
+h1{margin:0;font-size:15px;letter-spacing:-.2px;font-weight:800}
+.sub{margin:0;font-size:12.5px;color:var(--ink-3)}
 .tools{display:flex;gap:8px;flex-wrap:wrap}
 .btn{border:1px solid var(--line);background:#fff;color:var(--ink-2);padding:8px 13px;border-radius:10px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:.14s}
 .btn:hover{border-color:#CBD2DC;color:var(--ink);transform:translateY(-1px)}
@@ -44,7 +43,7 @@ h1{margin:0;font-size:21px;letter-spacing:-.4px;font-weight:800}
 .stat b{display:block;font-size:22px;letter-spacing:-.6px;line-height:1.15}
 .stat span{font-size:11.5px;color:var(--ink-3);font-weight:600}
 .stat.k-wash b{color:var(--wash)} .stat.k-protect b{color:var(--protect)}
-.stat.k-store b{color:var(--store)} .stat.k-new b{color:var(--accent)}
+.stat.k-store b{color:var(--store)}
 
 /* ---------- tab bars ---------- */
 .bar{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:11px 13px;margin-bottom:10px}
@@ -85,19 +84,21 @@ h1{margin:0;font-size:21px;letter-spacing:-.4px;font-weight:800}
 .sec-title{font-size:16px;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:9px}
 .sec-title .pill{font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;background:var(--line-2);color:var(--ink-3)}
 .sec-desc{font-size:12px;color:var(--ink-3)}
+.chiptoggle{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink-3);cursor:pointer;font-family:inherit;line-height:1.6}
+.chiptoggle:hover{border-color:#CBD2DC;color:var(--ink-2)}
+.chiptoggle.on{background:var(--ink);border-color:var(--ink);color:#fff}
+body.hide-chips .chips{display:none}
 
 /* ---------- slot grid ---------- */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .slot{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:10px;position:relative;transition:.16s;box-shadow:0 1px 2px rgba(16,24,40,.04)}
 .slot:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
 .slot.sel{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-.thumb{position:relative;width:100%;aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:#F0F1F3;cursor:pointer;display:block;border:0;padding:0;font-family:inherit}
-.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb{position:relative;width:100%;aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:#FFFFFF;border:1px solid var(--line-2);cursor:pointer;display:block;padding:0;font-family:inherit}
+.thumb img{width:100%;height:100%;object-fit:contain;background:#FFFFFF;display:block}
 .thumb .ov{position:absolute;inset:0;background:rgba(20,24,29,.62);color:#fff;opacity:0;transition:.16s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:700}
 .thumb:hover .ov{opacity:1}
 .thumb .ov .k{font-size:10px;font-weight:600;opacity:.82}
-.badge{position:absolute;top:7px;left:7px;font-size:9.5px;font-weight:800;padding:3px 7px;border-radius:6px;background:rgba(255,255,255,.94);color:var(--ink-2);letter-spacing:.2px}
-.badge.new{background:var(--accent);color:#fff}
 .name{margin-top:9px;font-size:12.5px;font-weight:700;line-height:1.42;color:var(--ink);white-space:pre-wrap;outline:none;border-radius:7px;padding:3px 4px;cursor:text;min-height:22px;transition:.14s}
 .name:hover{background:var(--line-2)}
 .name:focus{background:#fff;box-shadow:0 0 0 2px var(--accent-line)}
@@ -144,6 +145,7 @@ h1{margin:0;font-size:21px;letter-spacing:-.4px;font-weight:800}
 .opt.on.minor{background:var(--accent);border-color:var(--accent)}
 textarea.nm{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px;font-family:inherit;font-size:12.5px;line-height:1.45;resize:vertical;min-height:58px;outline:none;color:var(--ink)}
 textarea.nm:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.ro-text{width:100%;box-sizing:border-box;background:var(--line-2);border-radius:10px;padding:9px;font-size:12.5px;line-height:1.45;color:var(--ink-2);white-space:pre-wrap;cursor:default}
 .pop-foot{display:flex;gap:6px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line-2)}
 .pop-foot .btn{flex:1;text-align:center;font-size:12px;padding:9px}
 
@@ -199,7 +201,7 @@ textarea.nm:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-s
 .save em{font-style:normal;font-weight:600;color:var(--ink-3)}
 @keyframes blink{50%{opacity:.25}}
 
-@media (max-width:560px){ .grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))} .pop{width:calc(100vw - 28px)} }
+@media (max-width:560px){ .grid{grid-template-columns:repeat(2,1fr)} .pop{width:calc(100vw - 28px)} }
 
 /* ===================== 실시간 공동 편집 UI ===================== */
 .scconn{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;
@@ -250,6 +252,55 @@ textarea.nm:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-s
 .schempty{padding:34px 18px;text-align:center;color:#9CA3AF;font-size:13px;line-height:1.7}
 .schnote{padding:10px 18px;font-size:11px;color:#9CA3AF;border-top:1px solid #F3F4F6;min-height:14px}
 
+/* ---------- 이미지 보관함 (왼쪽 슬라이드 패널) ---------- */
+#bankZone{position:fixed;top:0;left:0;width:16px;height:100%;z-index:75}
+#bankHandle{width:16px;height:100%;background:linear-gradient(180deg,var(--accent),#DC4820);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:2px 0 8px rgba(16,24,40,.1)}
+#bankHandle span{writing-mode:vertical-rl;color:#fff;font-size:11px;font-weight:800;letter-spacing:1.5px;padding:16px 0}
+#bankPanel{position:absolute;top:0;left:16px;width:236px;height:100%;background:#fff;
+  border-right:1px solid #E5E7EB;box-shadow:6px 0 28px rgba(17,24,39,.14);
+  transform:translateX(-252px);transition:transform .2s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column}
+#bankZone:hover #bankPanel, #bankZone.force-open #bankPanel{transform:translateX(0)}
+#bankPanel .bkh{padding:14px 16px;border-bottom:1px solid #F3F4F6}
+#bankPanel .bkh b{font-size:13.5px}
+#bankPanel .bkh span{display:block;font-size:11px;color:#9CA3AF;font-weight:600;margin-top:3px;line-height:1.5}
+.bkzone{margin:12px;border:1.5px dashed var(--accent-line);background:var(--accent-soft);border-radius:11px;
+  padding:11px;text-align:center;cursor:pointer;outline:none;transition:.14s}
+.bkzone:focus{border-color:var(--accent);box-shadow:0 0 0 3px #FFE4DA;background:#fff}
+.bkzone .k{font-size:11.5px;font-weight:800;color:var(--accent)}
+.bkzone .d{font-size:10px;color:var(--ink-3);margin-top:2px}
+.bklist{flex:1;overflow:auto;padding:0 12px 12px;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;align-content:start}
+.bkitem{position:relative;aspect-ratio:1/1;border-radius:9px;overflow:hidden;border:1px solid var(--line-2);background:#fff;cursor:grab}
+.bkitem img{width:100%;height:100%;object-fit:contain;background:#fff;display:block;pointer-events:none}
+.bkitem .bkdel{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:6px;border:0;
+  background:rgba(20,24,29,.7);color:#fff;font-size:11px;line-height:1;cursor:pointer;opacity:0;transition:.14s}
+.bkitem:hover .bkdel{opacity:1}
+.bkempty{grid-column:1/-1;padding:20px 10px;text-align:center;color:#9CA3AF;font-size:11.5px;line-height:1.7}
+.slot.bank-drop{outline:2px dashed var(--accent);outline-offset:2px}
+
+/* ---------- 슬롯 보관함 (오른쪽 슬라이드 패널) ---------- */
+#slotBankZone{position:fixed;top:0;right:0;width:16px;height:100%;z-index:75}
+#slotBankHandle{width:16px;height:100%;background:linear-gradient(180deg,var(--ink-2),var(--ink));
+  display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:-2px 0 8px rgba(16,24,40,.1)}
+#slotBankHandle span{writing-mode:vertical-rl;color:#fff;font-size:11px;font-weight:800;letter-spacing:1.5px;padding:16px 0}
+#slotBankPanel{position:absolute;top:0;right:16px;width:250px;height:100%;background:#fff;
+  border-left:1px solid #E5E7EB;box-shadow:-6px 0 28px rgba(17,24,39,.14);
+  transform:translateX(266px);transition:transform .2s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column}
+#slotBankZone:hover #slotBankPanel, #slotBankZone.force-open #slotBankPanel{transform:translateX(0)}
+#slotBankZone.drop-target #slotBankPanel{border-color:var(--accent);box-shadow:-6px 0 28px rgba(240,85,43,.22)}
+.sblist{display:flex;flex-direction:column;padding:0}
+.sbi{display:flex;align-items:center;gap:9px;padding:9px 14px;border-bottom:1px solid #FAFAFA;cursor:grab}
+.sbi:hover{background:#FCFCFD}
+.sbi .sbimg{width:40px;height:40px;border-radius:8px;overflow:hidden;background:#fff;border:1px solid var(--line-2);flex:none}
+.sbi .sbimg img{width:100%;height:100%;object-fit:contain;background:#fff;display:block;pointer-events:none}
+.sbi .sbnm{flex:1;min-width:0;font-size:11.5px;font-weight:700;color:var(--ink);line-height:1.4;white-space:pre-wrap;word-break:break-word}
+.sbi .sbback{border:1px solid var(--line);background:#fff;border-radius:7px;padding:5px 7px;font-size:10.5px;font-weight:700;color:var(--ink-2);cursor:pointer;flex:none;font-family:inherit}
+.sbi .sbback:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.sbempty{padding:24px 16px;text-align:center;color:#9CA3AF;font-size:11.5px;line-height:1.7}
+#content.park-drop{outline:2px dashed var(--ink-2);outline-offset:-6px;border-radius:14px}
+
 /* 입장 화면 */
 #scGate{position:fixed;inset:0;z-index:120;background:rgba(17,24,39,.55);backdrop-filter:blur(4px);
   display:none;align-items:center;justify-content:center;padding:20px}
@@ -273,6 +324,14 @@ textarea.nm:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-s
   padding:11px;cursor:pointer;font-family:inherit;margin-top:2px}
 .scgs:hover{color:#374151}
 .scgp{font-size:12.5px;color:#6B7280;line-height:1.65;background:#F9FAFB;padding:12px;border-radius:10px}
+.scgrole{display:flex;gap:8px}
+.scgrolebtn{flex:1;border:1.5px solid #E5E7EB;background:#fff;color:#4B5563;font-weight:700;font-size:12.5px;
+  padding:11px 8px;border-radius:10px;cursor:pointer;font-family:inherit;transition:.14s}
+.scgrolebtn:hover{border-color:#CBD2DC}
+.scgrolebtn.on{background:#FFF1EC;border-color:#F0552B;color:#F0552B}
+.scgrole-note{font-size:11px;color:#9CA3AF;margin-top:8px;line-height:1.5}
+.scbadge-view{display:inline-flex;align-items:center;gap:6px;border:1px solid #FDE68A;background:#FFFBEB;
+  color:#B45309;border-radius:999px;padding:6px 12px;font-size:11.5px;font-weight:700;white-space:nowrap}
 @media (max-width:640px){ #scHist{width:100%} }
 
 
@@ -282,7 +341,7 @@ textarea.nm:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-s
 .si{border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-family:inherit;font-size:12.5px;color:var(--ink);outline:none;min-width:0}
 .si:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .si::placeholder{color:#C3C9D2;font-weight:600}
-.lnk{margin-top:9px;gap:6px}
+.lnk{margin-top:9px;gap:6px;display:flex}
 .dlink{flex:1;text-align:center;border:1px solid var(--line);border-radius:9px;padding:8px 6px;font-size:11.5px;
   font-weight:800;color:var(--ink-2);text-decoration:none;background:#fff;white-space:nowrap}
 .dlink:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
@@ -294,23 +353,19 @@ textarea.nm:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-s
 <div class="wrap">
   <div class="head">
     <div class="brand">
-      <div class="dot"></div>
-      <div>
-        <h1>슬로우케어 제품 라인업 대시보드</h1>
-        <p class="sub">설명형 네이밍(확정) 기준 · 여러 명이 동시에 편집 · 변경은 즉시 모두에게 반영</p>
-      </div>
+      <img class="brand-logo" src="data:image/png;base64,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" alt="SLOWCARE">
+      <h1>슬로우케어 제품 라인업 대시보드</h1>
+      <p class="sub">설명형 네이밍(확정) 기준 · 여러 명이 동시에 편집 · 변경은 즉시 모두에게 반영</p>
     </div>
     <div class="tools">
       <span class="scconn" id="scConn" title="동기화 상태"><i></i>혼자 쓰는 모드</span>
+      <span class="scbadge-view" id="scRoleBadge" style="display:none" title="조회 전용 계정으로 접속 중 — 수정할 수 없습니다">👁 조회 전용</span>
       <span id="scPeers"></span>
       <span class="save" id="saveState" title="변경은 서버에 즉시 저장됩니다"><i></i><b>자동 저장</b><em>대기 중</em></span>
+      <button class="btn schbtn" id="scHistBtn" data-act="sc-hist">변경 이력</button>
       <a class="btn" href="https://selfdiylab.daouoffice.com/gw/app/board/1526051924171026432" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">다우 게시판</a>
       <a class="btn" href="https://selfdiylab.daouoffice.com/drive/app/company-drive/1525192959480307713/1526066751324852224" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">인증서 폴더</a>
-      <button class="btn schbtn" id="scHistBtn" data-act="sc-hist">변경 이력</button>
-      <button class="btn" id="btnExport">구성 저장(JSON)</button>
-      <button class="btn" id="btnImport">불러오기</button>
-      <button class="btn ghost-danger" id="btnReset">초기화</button>
-      <input type="file" id="fileJson" accept="application/json" hidden>
+      <button class="btn" id="btnExport">지금 저장 + JSON 백업</button>
       <input type="file" id="fileImg" accept="image/*" hidden>
     </div>
   </div>
@@ -320,15 +375,15 @@ textarea.nm:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-s
   <div class="bar">
     <div class="bar-top">
       <span class="bar-label">대분류</span>
-      <span class="bar-hint">탭 선택 → 슬롯 표시 · 탭의 <b>✎</b> 또는 <b>더블클릭</b> → 이름 수정</span>
+      <span class="bar-hint" id="majorBarHint">탭 선택 → 슬롯 표시 · 탭의 <b>✎</b> 또는 <b>더블클릭</b> → 이름 수정</span>
     </div>
     <div class="tabs" id="majorTabs"></div>
   </div>
 
   <div class="bar">
     <div class="bar-top">
-      <span class="bar-label">소분류 · 타겟 의류별</span>
-      <span class="bar-hint">슬롯을 <b>탭 위로 드래그</b> → 즉시 편입 · 탭 <b>✎ / 더블클릭</b> → 이름 수정 · <b>＋ 소분류 추가</b>로 새 축 생성</span>
+      <span class="bar-label">의류별 케어</span>
+      <span class="bar-hint" id="minorBarHint">슬롯을 <b>탭 위로 드래그</b> → 즉시 편입 · 탭 <b>✎ / 더블클릭</b> → 이름 수정 · <b>＋ 소분류 추가</b>로 새 축 생성</span>
     </div>
     <div class="tabs" id="minorTabs"></div>
   </div>
@@ -336,7 +391,7 @@ textarea.nm:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-s
   <div id="content"></div>
 
   <p class="foot">
-    썸네일 클릭 → 제품 정보(제조국·용량·인증) 확인 및 수정 · <span class="kbd">Ctrl</span>+<span class="kbd">V</span> 이미지 교체 · 제품명 클릭 → 직접 수정 · 슬롯 드래그 → 순서 변경 · 탭 위로 드래그 → 카테고리 이동<br>
+    썸네일 클릭 → <span class="kbd">Ctrl</span>+<span class="kbd">V</span> 이미지 교체 · 제품명 클릭 → 직접 수정 · 슬롯 드래그 → 순서 변경 · 탭 위로 드래그 → 카테고리 이동<br>
     변경은 <b>즉시 서버에 저장</b>되어 같은 링크를 연 모든 사람 화면에 반영됩니다. 누가 무엇을 바꿨는지는 <b>변경 이력</b>에서 확인하고 되돌릴 수 있습니다.
   </p>
 </div>
@@ -350,6 +405,25 @@ textarea.nm:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-s
   <div class="schnote"></div>
 </div>
 <div id="scGate"></div>
+<div id="bankZone">
+  <div id="bankHandle" title="이미지 보관함"><span>이미지 보관함</span></div>
+  <div id="bankPanel">
+    <div class="bkh"><b>이미지 보관함</b><span>드래그해서 슬롯 이미지를 자유롭게 바꿔보세요</span></div>
+    <div class="bkzone" id="bkzone" tabindex="0">
+      <div class="k">여기에 Ctrl + V 로 추가</div>
+      <div class="d">클릭하면 파일로도 선택할 수 있습니다</div>
+    </div>
+    <div class="bklist" id="bankList"></div>
+  </div>
+</div>
+<input type="file" id="fileBank" accept="image/*" hidden>
+<div id="slotBankZone">
+  <div id="slotBankHandle" title="슬롯 보관함"><span>슬롯 보관함</span></div>
+  <div id="slotBankPanel">
+    <div class="bkh"><b>슬롯 보관함</b><span>슬롯을 드래그해서 잠시 치워두거나 다시 꺼내보세요</span></div>
+    <div class="bklist sblist" id="slotBankList"></div>
+  </div>
+</div>
 
 <script>
 /* ============================================================
@@ -360,7 +434,8 @@ const IMG = ["data:image/webp;base64,UklGRpgGAABXRUJQVlA4IIwGAAAQNQCdASoAAQABPj0
 const DEF_MAJORS = [
   {id:'wash',    label:'의류 세탁'},
   {id:'protect', label:'의류 보호'},
-  {id:'store',   label:'수납 공간 확보'}
+  {id:'store',   label:'수납 공간 확보'},
+  {id:'aux',     label:'세탁 보조'}
 ];
 const DEF_MINORS = [
   {id:'padding', label:'패딩 케어'},
@@ -370,6 +445,9 @@ const DEF_MINORS = [
   {id:'clean',   label:'클린 케어'}
 ];
 const DEF_SPECIAL = {all:'전체', none:'미지정'};
+const BLANK_NAME = '새 제품명 입력\n(설명형 네이밍)';
+/* 조회 전용(타팀) 화면에는 아직 이름도 채우지 않은 빈 슬롯을 보여주지 않습니다 */
+function teamProducts(){ return isViewOnly() ? state.products.filter(p=>p.name!==BLANK_NAME) : state.products; }
 const clone = o => JSON.parse(JSON.stringify(o));
 const mLabel = id => (state.majors.find(m=>m.id===id)||{}).label || '미지정';
 const nLabel = id => (state.minors.find(m=>m.id===id)||{}).label || '';
@@ -404,9 +482,8 @@ const BASE = [
 
 
 /* =====================================================================
-   다우오피스 기획_[슬로우케어] 게시판에서 가져온 제품 정보 (2026-10-23 기준)
-   - 슬롯 id 기준이라 제품명을 바꿔도 연결이 유지됩니다.
-   - 화면에서 수정하면 그 값이 우선하며 모두에게 공유됩니다.
+   다우오피스 기획_[슬로우케어] 게시판에서 가져온 제품 정보 (2026-10-23)
+   슬롯 id 기준이라 제품명을 바꿔도 연결이 유지됩니다.
    ===================================================================== */
 const DAOU_BOARD = 'https://selfdiylab.daouoffice.com/gw/app/board/1526051924171026432';
 const DAOU_CERT  = 'https://selfdiylab.daouoffice.com/drive/app/company-drive/1525192959480307713/1526066751324852224';
@@ -425,13 +502,14 @@ const SPEC = {
 };
 function specOf(p){
   const s = SPEC[p.id] || {};
-  return {
-    o: (p.m_o !== undefined && p.m_o !== null) ? p.m_o : (s.o || ''),
-    v: (p.m_v !== undefined && p.m_v !== null) ? p.m_v : (s.v || ''),
-    c: (p.m_c !== undefined && p.m_c !== null) ? p.m_c : (s.c || ''),
-    cert: !!s.cert,
-    post: s.post || null
-  };
+  const pick = (a,b)=> (a!==undefined && a!==null) ? a : (b||'');
+  return {o:pick(p.m_o,s.o), v:pick(p.m_v,s.v), c:pick(p.m_c,s.c), cert:!!s.cert, post:s.post||null};
+}
+function specLinksHTML(sp){
+  return `<div class="row lnk">
+    <a class="dlink ${sp.post?'':'off'}" target="_blank" rel="noopener" href="${sp.post?(DAOU_BOARD+'/post/'+sp.post):'#'}">다우 게시글 열기</a>
+    <a class="dlink ${sp.cert?'':'off'}" target="_blank" rel="noopener" href="${DAOU_CERT}">인증서 폴더</a>
+  </div>`;
 }
 
 /* ---------- 신제품 기획안 (미개척 영역) ---------- */
@@ -565,16 +643,54 @@ const state = {
   pop: null,               // product id
   pasteTarget: null,
   areaFilter: '전체',
-  adopted: {}              // planId -> productId
+  adopted: {},             // planId -> productId
+  parked: [],              // 슬롯 보관함에 잠시 치워둔 제품들
+  imgBank: []              // 이미지 보관함 (팀 전체 공유)
 };
+
+/* ---------- 소분류/대분류 라벨 표시 여부 (개인 브라우저 설정, 동기화 대상 아님) ---------- */
+let hideChips = false;
+try{ hideChips = localStorage.getItem('sc-hide-chips')==='1'; }catch(_){}
+document.body.classList.toggle('hide-chips', hideChips);
+
+/* ---------- 이미지 보관함 (동기화 대상 · state.imgBank · 팀 전체 공유) ---------- */
+function addToBank(dataURL){
+  if(!dataURL || (state.imgBank||[]).some(b=>b.img===dataURL)) return;
+  emit({t:'bimg-add', id:'b'+Math.random().toString(36).slice(2,9), img:dataURL});
+}
+function removeFromBank(id){ emit({t:'bimg-del', id:id}); }
+function renderBank(){
+  const el = document.getElementById('bankList'); if(!el) return;
+  const list = state.imgBank || [];
+  el.innerHTML = list.length
+    ? list.map(b=>`<div class="bkitem" draggable="true" data-id="${b.id}" title="드래그해서 슬롯에 놓으면 이미지가 바뀝니다">
+        <img src="${b.img}" alt="" draggable="false">
+        <button class="bkdel" data-act="bank-del" data-id="${b.id}" title="보관함에서 삭제">✕</button>
+      </div>`).join('')
+    : `<div class="bkempty">아직 보관된 이미지가 없습니다.<br>위에 이미지를 붙여넣거나<br>파일을 선택해 추가하세요.</div>`;
+}
+
+/* ---------- 슬롯 보관함 (동기화 대상 · state.parked) ---------- */
+function renderSlotBank(){
+  const el = document.getElementById('slotBankList'); if(!el) return;
+  const list = state.parked || [];
+  el.innerHTML = list.length
+    ? list.map(p=>`<div class="sbi" draggable="true" data-id="${p.id}" title="드래그해서 다시 꺼내기">
+        <div class="sbimg"><img src="${p.img}" alt=""></div>
+        <div class="sbnm">${esc(String(p.name).replace(/\n/g,' '))}</div>
+        <button class="sbback" data-act="unpark" data-id="${p.id}" title="다시 꺼내기">↩ 꺼내기</button>
+      </div>`).join('')
+    : `<div class="sbempty">보관함이 비어있습니다.<br>슬롯을 오른쪽 가장자리로 드래그하면<br>여기에 잠시 치워둘 수 있습니다.</div>`;
+}
 
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const byId = id => state.products.find(p=>p.id===id);
 function visible(){
-  if(state.level==='major') return state.key==='all' ? state.products : state.products.filter(p=>p.major===state.key);
-  if(state.level==='minor') return state.key==='none' ? state.products.filter(p=>!p.minor) : state.products.filter(p=>p.minor===state.key);
+  const list = teamProducts();
+  if(state.level==='major') return state.key==='all' ? list : list.filter(p=>p.major===state.key);
+  if(state.level==='minor') return state.key==='none' ? list.filter(p=>!p.minor) : list.filter(p=>p.minor===state.key);
   return [];
 }
 function toast(msg, ok){
@@ -585,44 +701,48 @@ function toast(msg, ok){
 
 /* ============================ RENDER ============================ */
 function renderStats(){
-  const p=state.products;
+  const p=teamProducts();
   const kc = {wash:'k-wash', protect:'k-protect', store:'k-store'};
   const rows=[['총 제품 슬롯', p.length, '']]
     .concat(state.majors.map(m=>[m.label, p.filter(x=>x.major===m.id).length, kc[m.id]||'']))
-    .concat([[tabLabel('special','none')+' 소분류', p.filter(x=>!x.minor).length, ''],
-             ['신규 채택 제품', p.filter(x=>x.isNew).length, 'k-new']]);
+    .concat([[tabLabel('special','none')+' 소분류', p.filter(x=>!x.minor).length, '']]);
   $('#stats').innerHTML = rows.map(r=>`<div class="stat ${r[2]}"><b>${r[1]}</b><span>${r[0]}</span></div>`).join('');
 }
 function tabEl(kind, id, cls, count, lv, key){
   const editing = state.editTab && state.editTab.kind===kind && state.editTab.id===id;
   const label = tabLabel(kind,id);
   if(editing){
-    const custom = kind==='minor' && String(id).indexOf('mx')===0;
+    const canDelMinor = kind==='minor';
+    const canDelMajor = kind==='major' && state.majors.length>1;
     return `<span class="tab edit ${cls}">
       <input class="tin" data-kind="${kind}" data-id="${id}" value="${esc(label)}" maxlength="24" spellcheck="false">
       <button class="tk" data-act="ren-ok" title="확인">✓</button>
-      ${custom?`<button class="tk del" data-act="min-del" data-id="${id}" title="이 소분류 삭제">✕</button>`:''}
+      ${canDelMinor?`<button class="tk del" data-act="min-del" data-id="${id}" title="이 소분류 삭제">✕</button>`:''}
+      ${canDelMajor?`<button class="tk del" data-act="maj-del" data-id="${id}" title="이 대분류 삭제">✕</button>`:''}
     </span>`;
   }
   const on = state.level===lv && state.key===key;
   return `<span class="tab ${cls} ${on?'on':''}" role="button" tabindex="0" data-lv="${lv}" data-k="${key}" data-ren-kind="${kind}" data-ren-id="${id}">
     <span class="tl">${esc(label)}</span><span class="n">${count}</span>
-    <span class="ed" data-act="ren" data-kind="${kind}" data-id="${id}" title="이름 수정 (탭 더블클릭으로도 가능)">✎</span>
+    ${isViewOnly()?'':`<span class="ed" data-act="ren" data-kind="${kind}" data-id="${id}" title="이름 수정 (탭 더블클릭으로도 가능)">✎</span>`}
   </span>`;
 }
 function renderTabs(){
-  const p=state.products;
+  const p=teamProducts();
   let h = tabEl('special','all','', p.length, 'major','all');
   h += state.majors.map(m=>tabEl('major', m.id, 'c-'+m.id, p.filter(x=>x.major===m.id).length, 'major', m.id)).join('');
+  if(!isViewOnly()) h += `<span class="tab addm" role="button" tabindex="0" data-act="maj-add">＋ 대분류 추가</span>`;
   h += `<span class="spacer"></span>`;
-  h += state.planShown
-    ? `<button class="tab plan ${state.level==='plan'?'on':''}" data-lv="plan" data-k="plan">＋ 신제품 기획/제안 <span class="n">${PLANS.length}</span></button>`
-    : `<span class="bar-hint">대분류 또는 소분류 탭을 선택하면 <b>[＋ 신제품 기획/제안]</b> 탭이 추가로 나타납니다</span>`;
+  if(!isViewOnly()){
+    h += state.planShown
+      ? `<button class="tab plan ${state.level==='plan'?'on':''}" data-lv="plan" data-k="plan">＋ 신제품 기획/제안 <span class="n">${PLANS.length}</span></button>`
+      : `<span class="bar-hint">대분류 또는 소분류 탭을 선택하면 <b>[＋ 신제품 기획/제안]</b> 탭이 추가로 나타납니다</span>`;
+  }
   $('#majorTabs').innerHTML = h;
 
   let n = state.minors.map(m=>tabEl('minor', m.id, 'c-minor', p.filter(x=>x.minor===m.id).length, 'minor', m.id)).join('');
   n += tabEl('special','none','', p.filter(x=>!x.minor).length, 'minor','none');
-  n += `<span class="tab addm" role="button" tabindex="0" data-act="min-add">＋ 소분류 추가</span>`;
+  if(!isViewOnly()) n += `<span class="tab addm" role="button" tabindex="0" data-act="min-add">＋ 소분류 추가</span>`;
   $('#minorTabs').innerHTML = n;
 
   const inp = document.querySelector('.tin');
@@ -630,13 +750,13 @@ function renderTabs(){
 }
 function slotHTML(p){
   const sel = state.pasteTarget===p.id ? ' sel':'';
-  return `<div class="slot${sel}" data-id="${p.id}" draggable="true">
-    <button class="thumb" data-act="pop" data-id="${p.id}" title="클릭: 편집 / 드래그: 순서·카테고리 이동">
+  const ro = isViewOnly();
+  return `<div class="slot${sel}" data-id="${p.id}" draggable="${ro?'false':'true'}">
+    <button class="thumb" data-act="pop" data-id="${p.id}" title="${ro?'클릭: 상세 보기':'클릭: 편집 / 드래그: 순서·카테고리 이동'}">
       <img src="${p.img}" alt="" draggable="false">
-      <span class="ov"><span>클릭 → 이미지 교체 · 이동</span><span class="k">드래그 → 순서 변경</span></span>
+      <span class="ov"><span>${ro?'클릭 → 상세 보기':'클릭 → 이미지 교체 · 이동'}</span>${ro?'':'<span class="k">드래그 → 순서 변경</span>'}</span>
     </button>
-    ${p.isNew?'<span class="badge new">신규 채택</span>':''}
-    <div class="name" contenteditable="plaintext-only" data-id="${p.id}" spellcheck="false" draggable="false">${esc(p.name)}</div>
+    <div class="name" ${ro?'':'contenteditable="plaintext-only"'} data-id="${p.id}" spellcheck="false" draggable="false">${esc(p.name)}</div>
     <div class="chips">
       <span class="chip ${p.major}">${mLabel(p.major)}</span>
       ${p.minor?`<span class="chip minor">${nLabel(p.minor)}</span>`
@@ -652,18 +772,22 @@ function renderContent(){
   const title = state.level==='major'
     ? (state.key==='all' ? 'All Products' : mLabel(state.key))
     : (state.key==='none' ? '소분류 미지정' : nLabel(state.key));
-  const desc = state.level==='major'
-    ? '클릭 → 이미지 교체(Ctrl+V)·제품명 수정 · <b>드래그 → 순서 변경</b> · 탭 위로 드래그 → 카테고리 이동'
-    : '<b>드래그로 순서 변경</b> · 다른 탭의 슬롯을 이 탭 위로 끌어다 놓으면 바로 편입됩니다.';
+  const desc = isViewOnly()
+    ? '클릭하면 제품 상세 정보를 볼 수 있습니다'
+    : state.level==='major'
+      ? '클릭 → 이미지 교체(Ctrl+V)·제품명 수정 · <b>드래그 → 순서 변경</b> · 탭 위로 드래그 → 카테고리 이동'
+      : '<b>드래그로 순서 변경</b> · 다른 탭의 슬롯을 이 탭 위로 끌어다 놓으면 바로 편입됩니다.';
   c.innerHTML = `
     <div class="sec-head">
-      <div class="sec-title">${esc(title)} <span class="pill">${list.length}개 슬롯</span></div>
+      <div class="sec-title">${esc(title)} <span class="pill">${list.length}개 슬롯</span>
+        <button class="chiptoggle${hideChips?' on':''}" data-act="toggle-chips" title="카테고리 라벨을 전체적으로 표시/숨김">${hideChips?'라벨 표시':'라벨 숨기기'}</button>
+      </div>
       <div class="sec-desc">${desc}</div>
     </div>
     ${list.length? `<div class="grid">${list.map(slotHTML).join('')}${addSlot()}</div>`
-      : `<div class="empty"><b>아직 이 카테고리에 배치된 제품이 없습니다</b><span>다른 탭에서 제품 썸네일을 클릭 → <b>카테고리 이동</b> 토글로 이곳에 배치하거나, 아래 ＋ 슬롯으로 새 제품을 추가하세요.</span><div class="grid" style="margin-top:16px;max-width:200px;margin-inline:auto">${addSlot()}</div></div>` }`;
+      : `<div class="empty"><b>아직 이 카테고리에 배치된 제품이 없습니다</b><span>다른 탭에서 제품 썸네일을 클릭 → <b>카테고리 이동</b> 토글로 이곳에 배치하거나, 아래 ＋ 슬롯으로 새 제품을 추가하세요.</span><div class="grid" style="margin-top:16px;max-width:200px;margin-inline:auto;grid-template-columns:1fr">${addSlot()}</div></div>` }`;
 }
-const addSlot = () => `<div class="slot add" data-act="add"><span class="pl">＋</span><span class="t">제품 슬롯 추가</span></div>`;
+const addSlot = () => isViewOnly() ? '' : `<div class="slot add" data-act="add"><span class="pl">＋</span><span class="t">제품 슬롯 추가</span></div>`;
 
 function planHTML(){
   const list = state.areaFilter==='전체' ? PLANS : PLANS.filter(p=>p.area===state.areaFilter);
@@ -699,7 +823,7 @@ function planCard(p){
     </div>
   </div>`;
 }
-function render(){ renderStats(); renderTabs(); renderContent(); renderPop();
+function render(){ renderStats(); renderTabs(); renderContent(); renderPop(); renderSlotBank(); renderBank();
   if(typeof renderLocks==='function') renderLocks(); }
 /* 남의 변경을 받았을 때: 내가 입력 중인 칸은 건드리지 않는 부분 렌더 */
 function softRender(){
@@ -708,6 +832,7 @@ function softRender(){
   const tFoc  = tin && document.activeElement===tin;
   renderStats(); if(!tFoc) renderTabs(); renderContent();
   if(!nmFoc) renderPop();
+  renderSlotBank(); renderBank();
   if(typeof renderLocks==='function') renderLocks();
 }
 
@@ -717,10 +842,38 @@ function renderPop(){
   if(!state.pop) return;
   const p = byId(state.pop); if(!p){ state.pop=null; return; }
   const anchor = document.querySelector(`.thumb[data-id="${p.id}"]`);
+  const ro = isViewOnly();
   const mask = document.createElement('div'); mask.className='mask'; mask.dataset.act='close';
   const pop = document.createElement('div'); pop.className='pop';
   const sp = specOf(p);
-  pop.innerHTML = `
+  pop.innerHTML = ro ? `
+    <h4><span>제품 정보</span><button class="x" data-act="close">✕</button></h4>
+    <div class="grp">
+      <div class="lb">제품명</div>
+      <div class="ro-text">${esc(p.name)}</div>
+    </div>
+    <div class="grp">
+      <div class="lb">대분류</div>
+      <div class="row"><span class="chip ${p.major}">${mLabel(p.major)}</span></div>
+    </div>
+    <div class="grp">
+      <div class="lb">소분류</div>
+      <div class="row">${p.minor?`<span class="chip minor">${nLabel(p.minor)}</span>`:`<span class="chip none">${esc(tabLabel('special','none'))}</span>`}</div>
+    </div>
+    <div class="grp">
+      <div class="lb">제품 정보 <i>다우오피스 기준</i></div>
+      <div class="spec">
+        <div><div class="k">제조국</div><div class="v">${esc(sp.o)||'—'}</div></div>
+        <div><div class="k">용량·규격</div><div class="v">${esc(sp.v)||'—'}</div></div>
+      </div>
+      <div class="spec" style="grid-template-columns:1fr">
+        <div><div class="k">인증</div><div class="v">${esc(sp.c)||'—'}</div></div>
+      </div>
+      ${specLinksHTML(sp)}
+    </div>
+    <div class="pop-foot">
+      <button class="btn primary" data-act="close">완료</button>
+    </div>` : `
     <h4><span>슬롯 편집</span><button class="x" data-act="close">✕</button></h4>
     <div class="grp">
       <div class="lb">제품 정보 <i>다우오피스 기준</i></div>
@@ -729,13 +882,8 @@ function renderPop(){
         <label>용량<input class="si" data-k="m_v" value="${esc(sp.v)}" placeholder="예: 1,000ml"></label>
         <label>인증<input class="si" data-k="m_c" value="${esc(sp.c)}" placeholder="예: 일반공산품"></label>
       </div>
-      <div class="row lnk">
-        <a class="dlink ${sp.post?'':'off'}" target="_blank" rel="noopener"
-           href="${sp.post?(DAOU_BOARD+'/post/'+sp.post):'#'}">다우 게시글 열기</a>
-        <a class="dlink ${sp.cert?'':'off'}" target="_blank" rel="noopener"
-           href="${DAOU_CERT}">인증서 폴더</a>
-      </div>
-      <div class="specnote">${sp.post?'':'이 제품은 아직 다우 게시판에 등록된 글이 없습니다. '}${sp.cert?'':'인증서 파일은 아직 없습니다. '}값을 고치면 모두에게 함께 반영됩니다.</div>
+      ${specLinksHTML(sp)}
+      <div class="specnote">${sp.post?'':'이 제품은 아직 다우 게시판에 등록된 글이 없습니다. '}값을 고치면 모두에게 함께 반영됩니다.</div>
     </div>
     <div class="grp">
       <div class="lb">썸네일 이미지 교체 <i>Ctrl+V</i></div>
@@ -760,6 +908,7 @@ function renderPop(){
       </div>
     </div>
     <div class="pop-foot">
+      <button class="btn" data-act="park" data-id="${p.id}">보관함에 넣기</button>
       <button class="btn ghost-danger" data-act="del" data-id="${p.id}">슬롯 삭제</button>
       <button class="btn primary" data-act="close">완료</button>
     </div>`;
@@ -784,26 +933,31 @@ function renderPop(){
   pop.style.left = L+'px'; pop.style.top = T+'px';
 
   state.pasteTarget = p.id;
-  const pz = pop.querySelector('#pz'); pz.focus();
-  pz.addEventListener('click', ()=>{ pendingImgTarget = p.id; $('#fileImg').click(); });
+  const pz = pop.querySelector('#pz');
+  if(pz){
+    pz.focus();
+    pz.addEventListener('click', ()=>{ pendingImgTarget = p.id; $('#fileImg').click(); });
+  }
   const nm = pop.querySelector('#nm');
-  let nameT=null;
-  nm.addEventListener('input', ()=>{
-    p.name = nm.value;
-    const n=document.querySelector(`.name[data-id="${p.id}"]`); if(n) n.textContent = nm.value;
-    const val = nm.value;
-    clearTimeout(nameT);
-    nameT=setTimeout(()=>emit({t:'name', pid:p.id, name:val}, {noRender:true, replaceLast:true}), 500);
-  });
-  nm.addEventListener('blur', ()=>{ clearTimeout(nameT); emit({t:'name', pid:p.id, name:nm.value}, {noRender:true, replaceLast:true}); });
+  if(nm && !ro){
+    let nameT=null;
+    nm.addEventListener('input', ()=>{
+      p.name = nm.value;
+      const n=document.querySelector(`.name[data-id="${p.id}"]`); if(n) n.textContent = nm.value;
+      const val = nm.value;
+      clearTimeout(nameT);
+      nameT=setTimeout(()=>emit({t:'name', pid:p.id, name:val}, {noRender:true, replaceLast:true}), 500);
+    });
+    nm.addEventListener('blur', ()=>{ clearTimeout(nameT); emit({t:'name', pid:p.id, name:nm.value}, {noRender:true, replaceLast:true}); });
 
-  /* 제조국·용량·인증 — 입력을 멈추면 저장되고 모두에게 공유됩니다 */
-  pop.querySelectorAll('.si').forEach(inp=>{
-    let t=null;
-    const send = ()=>{ emit({t:'meta', pid:p.id, k:inp.dataset.k, v:inp.value}, {noRender:true, replaceLast:true}); };
-    inp.addEventListener('input', ()=>{ clearTimeout(t); t=setTimeout(send, 600); });
-    inp.addEventListener('blur',  ()=>{ clearTimeout(t); send(); });
-  });
+    /* 제조국·용량·인증 — 입력을 멈추면 저장되고 모두에게 공유됩니다 */
+    pop.querySelectorAll('.si').forEach(inp=>{
+      let mt=null;
+      const send=()=>emit({t:'meta', pid:p.id, k:inp.dataset.k, v:inp.value},{noRender:true, replaceLast:true});
+      inp.addEventListener('input', ()=>{ clearTimeout(mt); mt=setTimeout(send,600); });
+      inp.addEventListener('blur',  ()=>{ clearTimeout(mt); send(); });
+    });
+  }
 }
 let pendingImgTarget = null;
 
@@ -854,7 +1008,7 @@ function adopt(planId){
 function addProduct(){
   const major = state.level==='major' && state.key!=='all' ? state.key : (state.level==='minor'? 'wash' : 'wash');
   const minor = state.level==='minor' && state.key!=='none' ? state.key : null;
-  const np = {id:newPid(), name:'새 제품명 입력\n(설명형 네이밍)', major, minor, img:ph('＋', state.products.length), isNew:true, note:''};
+  const np = {id:newPid(), name:BLANK_NAME, major, minor, img:ph('＋', state.products.length), isNew:true, note:''};
   emit({t:'add', p:np}, {noRender:true});
   state.pop = np.id; state.pasteTarget = np.id;
   render();
@@ -890,6 +1044,14 @@ document.addEventListener('click', e=>{
     case 'add':   addProduct(); break;
     case 'adopt': adopt(t.dataset.id); break;
     case 'area':  state.areaFilter = t.dataset.a; renderContent(); break;
+    case 'bank-del': removeFromBank(t.dataset.id); break;
+    case 'toggle-chips': {
+      hideChips = !hideChips;
+      try{ localStorage.setItem('sc-hide-chips', hideChips?'1':'0'); }catch(_){}
+      document.body.classList.toggle('hide-chips', hideChips);
+      renderContent();
+      break;
+    }
     case 'ren':   state.editTab = {kind:t.dataset.kind, id:t.dataset.id}; renderTabs(); break;
     case 'ren-ok': commitTab(); break;
     case 'min-add': {
@@ -900,6 +1062,14 @@ document.addEventListener('click', e=>{
       state.editTab={kind:'minor', id:nm.id};
       render(); toast('소분류를 추가했습니다. 이름을 입력하세요.', true); break;
     }
+    case 'maj-add': {
+      let k=1; while(state.majors.some(m=>m.label==='새 대분류 '+k)) k++;
+      const jm = {id:newMajorId(), label:'새 대분류 '+k};
+      emit({t:'maj-add', id:jm.id, label:jm.label}, {noRender:true});
+      state.level='major'; state.key=jm.id; state.planShown=true;
+      state.editTab={kind:'major', id:jm.id};
+      render(); toast('대분류를 추가했습니다. 이름을 입력하세요.', true); break;
+    }
     case 'min-del': {
       const id=t.dataset.id, m=state.minors.find(x=>x.id===id); if(!m) break;
       const cnt=state.products.filter(x=>x.minor===id).length;
@@ -908,6 +1078,17 @@ document.addEventListener('click', e=>{
       state.editTab=null;
       if(state.level==='minor' && state.key===id) state.key='none';
       render(); toast('소분류를 삭제했습니다.'); break;
+    }
+    case 'maj-del': {
+      const id=t.dataset.id, m=state.majors.find(x=>x.id===id); if(!m) break;
+      if(state.majors.length<=1){ toast('대분류는 최소 1개 있어야 합니다.'); break; }
+      const cnt=state.products.filter(x=>x.major===id).length;
+      const fb=state.majors.find(x=>x.id!==id);
+      if(cnt && !window.confirm(`"${m.label}" 대분류를 삭제하면 소속 제품 ${cnt}개가 "${fb.label}"(으)로 이동합니다. 계속할까요?`)) break;
+      emit({t:'maj-del', id:id}, {noRender:true});
+      state.editTab=null;
+      if(state.level==='major' && state.key===id) state.key='all';
+      render(); toast('대분류를 삭제했습니다.'); break;
     }
     case 'mv-major': { const p=byId(state.pop); if(p){ const v=t.dataset.v;
                        emit({t:'mv', pid:p.id, major:v}, {noRender:true});
@@ -920,6 +1101,13 @@ document.addEventListener('click', e=>{
     case 'del': { const p=byId(t.dataset.id); if(p && confirmDel(p)){
                   emit({t:'del', pid:p.id}, {noRender:true});
                   state.pop=null; state.pasteTarget=null; render(); toast('슬롯을 삭제했습니다.'); } break; }
+    case 'park': { const pid=t.dataset.id; const p=byId(pid); if(p){
+                  emit({t:'park', pid:pid}, {noRender:true});
+                  state.pop=null; state.pasteTarget=null; render();
+                  toast(`「${esc(String(p.name).replace(/\n/g,' ').slice(0,18))}」을 보관함으로 옮겼습니다.`, true); } break; }
+    case 'unpark': { const pid=t.dataset.id; const p=(state.parked||[]).find(x=>x.id===pid);
+                  emit({t:'unpark', pid:pid});
+                  if(p) toast(`「${esc(String(p.name).replace(/\n/g,' ').slice(0,18))}」을 다시 꺼냈습니다.`, true); break; }
   }
 });
 function confirmDel(p){ return window.confirm(`"${p.name.replace(/\n/g,' ')}" 슬롯을 삭제할까요?`); }
@@ -956,7 +1144,11 @@ document.addEventListener('input', e=>{
 });
 document.addEventListener('blur', e=>{
   const n = e.target.closest && e.target.closest('.name'); if(!n) return;
-  const p = byId(n.dataset.id); if(p){ p.name = n.innerText.trim() || '(제품명 없음)'; renderStats(); }
+  const p = byId(n.dataset.id); if(!p) return;
+  const val = n.innerText.trim() || '(제품명 없음)';
+  n.textContent = val;
+  emit({t:'name', pid:p.id, name:val}, {noRender:true});
+  renderStats();
 }, true);
 
 /* 전역 붙여넣기: 이미지 → 선택된 슬롯 / 텍스트 → 편집 영역 기본 동작 */
@@ -967,6 +1159,13 @@ document.addEventListener('paste', e=>{
   let file = null;
   for(const it of items){ if(it.kind==='file' && it.type.startsWith('image/')){ file = it.getAsFile(); break; } }
   if(file){
+    if(tg && tg.id==='bkzone'){
+      e.preventDefault();
+      const fr = new FileReader();
+      fr.onload = ev => downscale(ev.target.result, 720).then(d=>{ addToBank(d); toast('보관함에 이미지를 추가했습니다.', true); });
+      fr.readAsDataURL(file);
+      return;
+    }
     const target = state.pasteTarget || (tg.closest && tg.closest('[data-id]') && tg.closest('[data-id]').dataset.id);
     if(target){ e.preventDefault(); readFileToImg(file, target); }
     return;
@@ -977,45 +1176,31 @@ document.addEventListener('paste', e=>{
   }
 });
 $('#fileImg').addEventListener('change', e=>{ const f=e.target.files[0]; if(f && pendingImgTarget) readFileToImg(f, pendingImgTarget); e.target.value=''; });
+$('#bkzone').addEventListener('click', ()=> $('#fileBank').click());
+$('#fileBank').addEventListener('change', e=>{
+  const f = e.target.files[0]; e.target.value='';
+  if(!f || !f.type.startsWith('image/')) return;
+  const fr = new FileReader();
+  fr.onload = ev => downscale(ev.target.result, 720).then(d=>{ addToBank(d); toast('보관함에 이미지를 추가했습니다.', true); });
+  fr.readAsDataURL(f);
+});
 
 document.addEventListener('keydown', e=>{ if(e.key==='Escape' && state.pop){ state.pop=null; render(); } });
 
-/* 저장 / 불러오기 / 초기화 (로컬 파일만 사용) */
+/* 저장 (로컬 파일만 사용) */
 $('#btnExport').addEventListener('click', ()=>{
+  if(typeof SC!=='undefined' && SC.on){ if(SC.queue.length) flush(); }
+  else { save(true); }
   const data = {v:2, exportedAt:new Date().toISOString(), products:state.products, adopted:state.adopted,
                 majors:state.majors, minors:state.minors, special:state.special};
   const url = URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   const a = document.createElement('a'); a.href=url; a.download='slowcare-lineup.json'; a.click();
-  URL.revokeObjectURL(url); toast('현재 구성을 JSON으로 저장했습니다.', true);
-});
-$('#btnImport').addEventListener('click', ()=> $('#fileJson').click());
-$('#fileJson').addEventListener('change', e=>{
-  const f=e.target.files[0]; if(!f) return;
-  const fr=new FileReader();
-  fr.onload = ev => { try{
-      const d = JSON.parse(ev.target.result);
-      if(!Array.isArray(d.products)) throw 0;
-      emit({t:'snap', why:'JSON 파일에서 불러옴', d:{
-        products:d.products, adopted:d.adopted||{},
-        majors:(Array.isArray(d.majors)&&d.majors.length)?d.majors:clone(DEF_MAJORS),
-        minors:(Array.isArray(d.minors)&&d.minors.length)?d.minors:clone(DEF_MINORS),
-        special:Object.assign(clone(DEF_SPECIAL), d.special||{})}}, {noRender:true});
-      state.pop=null; state.pasteTarget=null; render(); toast('구성을 불러왔습니다.', true);
-    }catch(_){ toast('불러올 수 없는 파일 형식입니다.'); } };
-  fr.readAsDataURL ? fr.readAsText(f) : null; e.target.value='';
-});
-$('#btnReset').addEventListener('click', ()=>{
-  if(!window.confirm('모든 편집 내용을 버리고 초기 16개 라인업으로 되돌릴까요?')) return;
-  emit({t:'reset'}, {noRender:true});
-  state.level='major'; state.key='all'; state.editTab = null;
-  state.planShown=false; state.pop=null; state.pasteTarget=null; state.areaFilter='전체';
-  try{ localStorage.removeItem(SKEY); }catch(_){}
-  lastSnap = null; render(); save(true); toast('초기 라인업으로 되돌렸습니다.');
+  URL.revokeObjectURL(url); toast('지금 상태를 저장하고 JSON으로도 백업했습니다.', true);
 });
 
 /* ============================ 드래그 앤 드롭 ============================ */
 const drag = {id:null, at:0};
-function clearMarks(){ document.querySelectorAll('.drop-l,.drop-r,.drop-end,.tab-drop').forEach(e=>e.classList.remove('drop-l','drop-r','drop-end','tab-drop')); }
+function clearMarks(){ document.querySelectorAll('.drop-l,.drop-r,.drop-end,.tab-drop,.drop-target,.park-drop').forEach(e=>e.classList.remove('drop-l','drop-r','drop-end','tab-drop','drop-target','park-drop')); }
 function moveTo(dragId, targetId, after){
   const arr = state.products;
   const from = arr.findIndex(x=>x.id===dragId); if(from<0) return;
@@ -1032,9 +1217,12 @@ document.addEventListener('dragstart', e=>{
   state.pop = null; document.querySelectorAll('.mask,.pop').forEach(x=>x.remove());
   try{ e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain', drag.id); }catch(_){}
   s.classList.add('dragging');
+  const sbz = document.getElementById('slotBankZone'); if(sbz) sbz.classList.add('force-open');
 });
 document.addEventListener('dragover', e=>{
   if(!drag.id) return;
+  const bankZone = e.target.closest('#slotBankZone');
+  if(bankZone){ e.preventDefault(); clearMarks(); bankZone.classList.add('drop-target'); return; }
   const tab = e.target.closest('[data-lv]');
   const s = e.target.closest('.slot');
   if(tab && tab.dataset.lv !== 'plan'){ e.preventDefault(); clearMarks(); tab.classList.add('tab-drop'); return; }
@@ -1050,6 +1238,14 @@ document.addEventListener('drop', e=>{
   if(!drag.id) return;
   e.preventDefault();
   const p = byId(drag.id);
+  const bankZone = e.target.closest('#slotBankZone');
+  if(p && bankZone){
+    emit({t:'park', pid:p.id}, {noRender:true});
+    toast(`「${esc(String(p.name).replace(/\n/g,' ').slice(0,18))}」을 보관함으로 옮겼습니다.`, true);
+    drag.id = null; clearMarks(); render();
+    const sbz2 = document.getElementById('slotBankZone'); if(sbz2) sbz2.classList.remove('force-open');
+    return;
+  }
   const tab = e.target.closest('[data-lv]');
   const s = e.target.closest('.slot');
   if(p && tab && tab.dataset.lv !== 'plan'){
@@ -1070,14 +1266,107 @@ document.addEventListener('drop', e=>{
   }
   drag.id = null; clearMarks(); render();
 });
-document.addEventListener('dragend', ()=>{ drag.id=null; clearMarks(); document.querySelectorAll('.dragging').forEach(e=>e.classList.remove('dragging')); });
+document.addEventListener('dragend', ()=>{
+  drag.id=null; clearMarks(); document.querySelectorAll('.dragging').forEach(e=>e.classList.remove('dragging'));
+  const sbz3 = document.getElementById('slotBankZone'); if(sbz3) sbz3.classList.remove('force-open');
+});
+
+/* ---------- 이미지 보관함 → 슬롯 드래그 교환 ---------- */
+let bankDrag = null;
+function clearBankDrop(){
+  bankDrag = null;
+  const z = document.getElementById('bankZone'); if(z) z.classList.remove('force-open');
+  document.querySelectorAll('.bank-drop').forEach(x=>x.classList.remove('bank-drop'));
+}
+document.addEventListener('dragstart', e=>{
+  const bi = e.target.closest && e.target.closest('.bkitem');
+  if(!bi) return;
+  const item = (state.imgBank||[]).find(b=>b.id===bi.dataset.id); if(!item) return;
+  bankDrag = {img:item.img};
+  const z = document.getElementById('bankZone'); if(z) z.classList.add('force-open');
+  try{ e.dataTransfer.effectAllowed='copy'; e.dataTransfer.setData('text/plain', 'bank-image'); }catch(_){}
+});
+document.addEventListener('dragover', e=>{
+  if(!bankDrag) return;
+  const s = e.target.closest && e.target.closest('.slot[data-id]');
+  document.querySelectorAll('.bank-drop').forEach(x=>{ if(x!==s) x.classList.remove('bank-drop'); });
+  if(s){ e.preventDefault(); s.classList.add('bank-drop'); }
+});
+document.addEventListener('drop', e=>{
+  if(!bankDrag) return;
+  e.preventDefault();
+  const s = e.target.closest && e.target.closest('.slot[data-id]');
+  if(s){
+    const p = byId(s.dataset.id);
+    if(p){ addToBank(p.img); setImage(p.id, bankDrag.img); }
+  }
+  clearBankDrop();
+});
+document.addEventListener('dragend', e=>{
+  if(e.target.closest && e.target.closest('.bkitem')) clearBankDrop();
+});
+
+/* ---------- 슬롯 보관함 → 화면으로 다시 꺼내기 ---------- */
+let parkDrag = null;
+function clearParkDrag(){
+  parkDrag = null;
+  const z = document.getElementById('slotBankZone'); if(z) z.classList.remove('force-open');
+  const c = document.getElementById('content'); if(c) c.classList.remove('park-drop');
+}
+document.addEventListener('dragstart', e=>{
+  const sb = e.target.closest && e.target.closest('.sbi');
+  if(!sb) return;
+  parkDrag = {pid: sb.dataset.id};
+  const z = document.getElementById('slotBankZone'); if(z) z.classList.add('force-open');
+  try{ e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain', 'park-item'); }catch(_){}
+});
+document.addEventListener('dragover', e=>{
+  if(!parkDrag) return;
+  const s = e.target.closest && e.target.closest('.slot');
+  const c = e.target.closest && e.target.closest('#content');
+  if(s){
+    e.preventDefault(); clearMarks();
+    if(s.classList.contains('add')){ s.classList.add('drop-end'); }
+    else{
+      const r = s.getBoundingClientRect();
+      s.classList.add(e.clientX < r.left + r.width/2 ? 'drop-l' : 'drop-r');
+    }
+  } else if(c){
+    e.preventDefault(); clearMarks(); c.classList.add('park-drop');
+  }
+});
+document.addEventListener('drop', e=>{
+  if(!parkDrag) return;
+  e.preventDefault();
+  const s = e.target.closest && e.target.closest('.slot');
+  const c = e.target.closest && e.target.closest('#content');
+  if(s || c){
+    const item = (state.parked||[]).find(x=>x.id===parkDrag.pid);
+    const op = {t:'unpark', pid:parkDrag.pid};
+    if(state.level==='major' && state.key!=='all'){ op.major = state.key; }
+    else if(state.level==='minor'){ op.minor = state.key==='none' ? null : state.key; }
+    if(s && !s.classList.contains('add')){
+      const r = s.getBoundingClientRect();
+      op.target = s.dataset.id; op.after = e.clientX >= r.left + r.width/2;
+    } else {
+      const vis = visible(); const last = vis[vis.length-1];
+      if(last){ op.target = last.id; op.after = true; }
+    }
+    emit(op);
+    if(item) toast(`「${esc(String(item.name).replace(/\n/g,' ').slice(0,18))}」을 원하는 위치에 꺼냈습니다.`, true);
+  }
+  clearParkDrag(); clearMarks();
+});
+document.addEventListener('dragend', e=>{
+  if(e.target.closest && e.target.closest('.sbi')){ clearParkDrag(); clearMarks(); }
+});
 
 /* ============================ 10초 자동 저장 ============================ */
 const SKEY = 'slowcare-lineup-dashboard-v1';
 let storeOK = true, lastSnap = null, memSnap = null, warned = false;
 function snapshot(){
   return JSON.stringify({v:2, ts:Date.now(), products:state.products, adopted:state.adopted,
-    majors:state.majors, minors:state.minors, special:state.special,
+    majors:state.majors, minors:state.minors, special:state.special, parked:state.parked, imgBank:state.imgBank,
     view:{level:state.level, key:state.key, planShown:state.planShown, areaFilter:state.areaFilter}});
 }
 function setSaveUI(mode, text){
@@ -1111,6 +1400,8 @@ function restore(){
     const d = JSON.parse(raw);
     if(!Array.isArray(d.products) || !d.products.length) throw 0;
     state.products = d.products; state.adopted = d.adopted || {};
+    state.parked = Array.isArray(d.parked) ? d.parked : [];
+    state.imgBank = Array.isArray(d.imgBank) ? d.imgBank : [];
     if(Array.isArray(d.majors) && d.majors.length) state.majors = d.majors;
     if(Array.isArray(d.minors) && d.minors.length) state.minors = d.minors;
     if(d.special) state.special = Object.assign(clone(DEF_SPECIAL), d.special);
@@ -1142,8 +1433,8 @@ render();
    ②  BOARD 는 supabase-setup.sql 에 넣은 보드 이름과 같아야 합니다.
    ③  비워두면 이 파일은 지금처럼 "혼자 쓰는 모드"로 동작합니다.
    -------------------------------------------------------------------- */
-var SB_URL   = "https://egndknmyhraagoxzvdej.supabase.co";
-var SB_KEY   = "sb_publishable_BRkxfRb3Wkch5JLf19Mc_g_iCD9G5EN";
+var SB_URL   = "https://hbhhaezsffnidbmudzpr.supabase.co";
+var SB_KEY   = "sb_publishable_XnUlEe-fviEhd3ya3oZdyg_CG0kyNqo";
 var BOARD    = "slowcare";
 
 /* URL 파라미터로도 덮어쓸 수 있습니다: ?url=...&key=...&board=... */
@@ -1163,7 +1454,7 @@ var COLORS = ['#F0552B','#2563EB','#0E9F6E','#8B5CF6','#D97706','#DB2777','#0891
 var SC = {
   on:false, mode:'solo', conn:'off', seq:0, snapSeq:0,
   me:{id:null, name:'', color:0},
-  pass:'', title:'',
+  pass:'', title:'', role:'edit',
   peers:[], hist:[], base:null,
   queue:[], sending:false, pulling:false,
   ws:null, wsRef:0, wsOK:false, wsTimer:null, hbTimer:null,
@@ -1250,9 +1541,18 @@ function apply(op, d){
       break;
     }
     case 'min-add': { if(!d.minors.some(function(m){return m.id===op.id;})) d.minors.push({id:op.id,label:op.label}); break; }
+    case 'maj-add': { if(!d.majors.some(function(m){return m.id===op.id;})) d.majors.push({id:op.id,label:op.label}); break; }
     case 'min-del': {
       d.products.forEach(function(x){ if(x.minor===op.id) x.minor=null; });
       d.minors = d.minors.filter(function(x){ return x.id!==op.id; });
+      break;
+    }
+    case 'maj-del': {
+      if(d.majors.length<=1) break;
+      var fb = d.majors.find(function(x){ return x.id!==op.id; });
+      if(!fb) break;
+      d.products.forEach(function(x){ if(x.major===op.id) x.major = fb.id; });
+      d.majors = d.majors.filter(function(x){ return x.id!==op.id; });
       break;
     }
     case 'adopt': {
@@ -1261,9 +1561,41 @@ function apply(op, d){
       d.adopted[op.planId]=op.p.id;
       break;
     }
+    case 'park': {
+      var pi=d.products.findIndex(function(x){ return x.id===op.pid; }); if(pi<0) break;
+      var parked=d.products.splice(pi,1)[0];
+      if(!d.parked) d.parked=[];
+      d.parked.unshift(parked);
+      break;
+    }
+    case 'unpark': {
+      if(!d.parked) break;
+      var ui=d.parked.findIndex(function(x){ return x.id===op.pid; }); if(ui<0) break;
+      var revived=d.parked.splice(ui,1)[0];
+      if('major' in op) revived.major=op.major;
+      if('minor' in op) revived.minor=op.minor||null;
+      if(!find(revived.id)){
+        var ti = op.target ? d.products.findIndex(function(x){ return x.id===op.target; }) : -1;
+        if(ti<0) d.products.push(revived);
+        else { if(op.after) ti+=1; d.products.splice(ti,0,revived); }
+      }
+      break;
+    }
+    case 'bimg-add': {
+      if(!d.imgBank) d.imgBank=[];
+      if(d.imgBank.some(function(b){ return b.img===op.img; })) break;
+      d.imgBank.unshift({id:op.id, img:op.img});
+      if(d.imgBank.length>20) d.imgBank.length=20;
+      break;
+    }
+    case 'bimg-del': {
+      if(!d.imgBank) break;
+      d.imgBank = d.imgBank.filter(function(b){ return b.id!==op.id; });
+      break;
+    }
     case 'reset': {
       d.majors=clone(DEF_MAJORS); d.minors=clone(DEF_MINORS); d.special=clone(DEF_SPECIAL);
-      d.products=initProducts(); d.adopted={};
+      d.products=initProducts(); d.adopted={}; d.parked=[]; d.imgBank=[];
       break;
     }
     case 'snap': {
@@ -1271,6 +1603,8 @@ function apply(op, d){
       d.products=clone(s.products||[]); d.adopted=clone(s.adopted||{});
       d.majors=clone(s.majors||DEF_MAJORS); d.minors=clone(s.minors||DEF_MINORS);
       d.special=Object.assign(clone(DEF_SPECIAL), s.special||{});
+      d.parked=clone(s.parked||[]);
+      d.imgBank=clone(s.imgBank||[]);
       break;
     }
   }
@@ -1278,16 +1612,55 @@ function apply(op, d){
 function docSnap(d){
   d=docOf(d);
   return {products:clone(d.products), adopted:clone(d.adopted),
-          majors:clone(d.majors), minors:clone(d.minors), special:clone(d.special)};
+          majors:clone(d.majors), minors:clone(d.minors), special:clone(d.special),
+          parked:clone(d.parked||[]), imgBank:clone(d.imgBank||[])};
 }
 function emptyDoc(){
-  return {products:[], adopted:{}, majors:clone(DEF_MAJORS), minors:clone(DEF_MINORS), special:clone(DEF_SPECIAL)};
+  return {products:[], adopted:{}, majors:clone(DEF_MAJORS), minors:clone(DEF_MINORS), special:clone(DEF_SPECIAL), parked:[], imgBank:[]};
 }
+
+/* ---------- Ctrl+Z 되돌리기 (최근 10건, 개인 브라우저 세션 한정) ---------- */
+const UNDO_MAX = 10;
+let undoStack = [], redoStack = [];
+function pushUndo(){
+  undoStack.push(docSnap(state));
+  if(undoStack.length>UNDO_MAX) undoStack.shift();
+  redoStack.length = 0;
+}
+function undo(){
+  if(!undoStack.length){ toast('더 이상 되돌릴 변경이 없습니다.'); return; }
+  const prev = undoStack.pop();
+  redoStack.push(docSnap(state));
+  if(redoStack.length>UNDO_MAX) redoStack.shift();
+  emit({t:'snap', d:prev, why:'실행 취소'}, {skipUndo:true});
+  toast(`변경을 되돌렸습니다. (${undoStack.length}단계 더 가능)`, true);
+}
+function redo(){
+  if(!redoStack.length){ toast('다시 실행할 변경이 없습니다.'); return; }
+  const next = redoStack.pop();
+  undoStack.push(docSnap(state));
+  if(undoStack.length>UNDO_MAX) undoStack.shift();
+  emit({t:'snap', d:next, why:'다시 실행'}, {skipUndo:true});
+  toast('되돌리기를 다시 실행했습니다.', true);
+}
+document.addEventListener('keydown', e=>{
+  const mod = e.ctrlKey || e.metaKey;
+  if(!mod) return;
+  const key = e.key.toLowerCase();
+  if(key!=='z' && key!=='y') return;
+  const tg = e.target;
+  const inEditable = tg && (tg.isContentEditable || tg.tagName==='TEXTAREA' || tg.tagName==='INPUT');
+  if(inEditable) return;                          // 텍스트 입력 중에는 브라우저 기본 되돌리기 사용
+  e.preventDefault();
+  if(key==='y' || (key==='z' && e.shiftKey)) redo();
+  else undo();
+});
 /* 기준 상태 + op 목록으로 특정 시점의 문서를 계산 (되돌리기용) */
 function docAt(seq){
   var d = SC.base ? {products:clone(SC.base.products||[]), adopted:clone(SC.base.adopted||{}),
                      majors:clone(SC.base.majors||DEF_MAJORS), minors:clone(SC.base.minors||DEF_MINORS),
-                     special:Object.assign(clone(DEF_SPECIAL), SC.base.special||{})}
+                     special:Object.assign(clone(DEF_SPECIAL), SC.base.special||{}),
+                     parked:clone(SC.base.parked||[]), imgBank:clone(SC.base.imgBank||[])}
                  : (function(){ var e=emptyDoc(); apply({t:'reset'}, e); return e; })();
   SC.hist.forEach(function(h){ if(h.seq<=seq) apply(h.op, d); });
   return d;
@@ -1297,12 +1670,31 @@ function docAt(seq){
 var nseq = 0;
 function newPid(){ return 'n'+SC.me.id+'-'+(++nseq); }
 function newMinorId(){ return 'mx'+SC.me.id+'-'+(++nseq); }
+function newMajorId(){ return 'jx'+SC.me.id+'-'+(++nseq); }
 
 /* =====================================================================
    변경 내보내기
    ===================================================================== */
+function isViewOnly(){ return typeof SC!=='undefined' && SC.on && SC.role==='view'; }
+/* 조회 전용 계정에게는 편집 기능이 있는 것처럼 보이는 안내문구도 함께 감춥니다 */
+function applyRoleChrome(){
+  const ro = isViewOnly();
+  const rb=document.getElementById('scRoleBadge'); if(rb) rb.style.display = ro ? '' : 'none';
+  const bz=document.getElementById('bankZone'); if(bz) bz.style.display = ro ? 'none' : '';
+  const sbz=document.getElementById('slotBankZone'); if(sbz) sbz.style.display = ro ? 'none' : '';
+  const mh=document.getElementById('majorBarHint');
+  if(mh) mh.innerHTML = ro ? '탭을 선택하면 소속 슬롯이 표시됩니다' : '탭 선택 → 슬롯 표시 · 탭의 <b>✎</b> 또는 <b>더블클릭</b> → 이름 수정';
+  const nh=document.getElementById('minorBarHint');
+  if(nh) nh.innerHTML = ro ? '탭을 선택하면 소속 슬롯이 표시됩니다' : '슬롯을 <b>탭 위로 드래그</b> → 즉시 편입 · 탭 <b>✎ / 더블클릭</b> → 이름 수정 · <b>＋ 소분류 추가</b>로 새 축 생성';
+}
 function emit(op, opt){
   opt = opt||{};
+  if(isViewOnly()){
+    toast('조회 전용 모드입니다. 수정할 수 없습니다.');
+    if(!opt.noRender) render();
+    return;
+  }
+  if(!opt.skipUndo) pushUndo();
   apply(op, state);
   if(SC.on){
     if(opt.replaceLast && SC.queue.length && SC.queue[SC.queue.length-1].t===op.t && SC.queue[SC.queue.length-1].pid===op.pid){
@@ -1352,6 +1744,7 @@ function reauth(){
 }
 function flush(){
   if(!SC.on || SC.sending || !SC.queue.length) return;
+  if(SC.role==='view'){ SC.queue=[]; saveQueue(); return; }   // 조회 전용 계정은 서버에 저장을 시도하지 않습니다
   /* 서버가 받았다고 확인해 줄 때까지 큐에서 지우지 않습니다.
      모든 op 는 id 기준이라 혹시 두 번 전송돼도 결과가 달라지지 않습니다. */
   var batch = SC.queue.slice(); SC.sending=true;
@@ -1434,7 +1827,9 @@ function opText(op){
     case 'del':     return '슬롯 삭제';
     case 'tab':     return '탭 이름을 「'+esc(op.label)+'」로 변경';
     case 'min-add': return '소분류 「'+esc(op.label)+'」 추가';
+    case 'maj-add': return '대분류 「'+esc(op.label)+'」 추가';
     case 'min-del': return '소분류 삭제';
+    case 'maj-del': return '대분류 삭제';
     case 'adopt':   return '기획안 「'+esc(String(op.p&&op.p.name||'').replace(/\n/g,' ').slice(0,18))+'」 채택';
     case 'reset':   return '전체 초기화';
     case 'snap':    return op.why||'상태 되돌리기';
@@ -1442,9 +1837,12 @@ function opText(op){
   return op.t;
 }
 
-/* ---------- 이력이 길어지면 압축 ---------- */
+/* ---------- 이력이 길어지면 압축 ----------
+   이미지가 포함된 op 은 하나하나가 수십 KB 라서, 텍스트 위주 앱과 달리
+   금방 payload 가 커집니다 (400건 기준이면 join 응답이 수 MB까지 불어나
+   느린 네트워크에서 이미지가 하나도 안 뜨는 원인이 됨) — 훨씬 낮은 기준으로 압축합니다. */
 function maybeCompact(){
-  if(SC.hist.length < 400) return;
+  if(SC.hist.length < 40) return;
   var upto = SC.seq;
   rpc('sc_compact', {p_board:BOARD, p_pass:SC.pass, p_snap:docSnap(state), p_upto:upto})
     .then(function(){ SC.base=docSnap(state); SC.snapSeq=upto; SC.hist=[]; if(SC.histOpen) renderHist(); })
@@ -1588,7 +1986,7 @@ function renderHist(){
       +'<span class="scdot" style="background:'+(mine?myColor():peerColor(h.color||0))+'"></span>'
       +'<div class="schb"><div class="scht">'+opText(h.op)+'</div>'
       +'<div class="schm">'+esc(h.name||(mine?(SC.me.name||'나'):'익명'))+' · '+t+(h.pend?' · 저장 중':'')+'</div></div>'
-      +(h.pend?'':'<button class="schb2" data-act="sc-revert" data-seq="'+h.seq+'">이 시점으로</button>')
+      +(h.pend||isViewOnly()?'':'<button class="schb2" data-act="sc-revert" data-seq="'+h.seq+'">이 시점으로</button>')
       +'</div>';
   }).join('');
   el.querySelector('.schlist').innerHTML = rows || (SC.on
@@ -1611,7 +2009,7 @@ function revertTo(seq){
   var t=new Date(h.ts).toTimeString().slice(0,5);
   if(!window.confirm('['+t+'] "'+String(opText(h.op)).replace(/<[^>]+>/g,'')+'" 직후 상태로 되돌립니다.\n\n이후의 모든 변경이 취소되고, 접속한 모든 사람의 화면에 함께 적용됩니다. 계속할까요?')) return;
   var d=docAt(h.seq);
-  emit({t:'snap', d:{products:d.products, adopted:d.adopted, majors:d.majors, minors:d.minors, special:d.special},
+  emit({t:'snap', d:{products:d.products, adopted:d.adopted, majors:d.majors, minors:d.minors, special:d.special, parked:d.parked, imgBank:d.imgBank},
         why:'['+t+'] 시점으로 되돌림'});
   toast('선택한 시점으로 되돌렸습니다.', true);
 }
@@ -1627,7 +2025,13 @@ function gate(){
    '<div class="scg">'
    + '<div class="scgh"><b>슬로우케어 라인업</b><span>'+(configured?'팀 공동 편집':'접속 설정')+'</span></div>'
    + (configured
-      ? '<label class="scgl">이름 <i>다른 사람에게 표시됩니다</i></label>'
+      ? '<label class="scgl" style="margin-top:0">접속 구분</label>'
+        +'<div class="scgrole">'
+          +'<button type="button" class="scgrolebtn on" id="scgRoleEdit" data-role="edit">기획1팀 전용</button>'
+          +'<button type="button" class="scgrolebtn" id="scgRoleView" data-role="view">타팀 전용</button>'
+        +'</div>'
+        +'<div class="scgrole-note" id="scgRoleNote">기획1팀 전용은 자유롭게 수정할 수 있습니다.</div>'
+        +'<label class="scgl">이름 <i>다른 사람에게 표시됩니다</i></label>'
         +'<input id="scgName" class="scgi" maxlength="12" placeholder="예: 이현명" value="'+esc(SC.me.name)+'">'
         +'<label class="scgl">공용 비밀번호</label>'
         +'<input id="scgPass" class="scgi" type="password" placeholder="팀에 공유된 비밀번호" value="'+esc(rememberedPass())+'">'
@@ -1651,6 +2055,15 @@ function gate(){
   if($g('scgSolo')) $g('scgSolo').onclick=function(){ box.classList.remove('open'); soloMode(); };
 
   if(configured){
+    var roleNotes = {edit:'기획1팀 전용은 자유롭게 수정할 수 있습니다.', view:'타팀 전용은 내용을 볼 수만 있고 수정할 수 없습니다.'};
+    [$g('scgRoleEdit'),$g('scgRoleView')].forEach(function(b){
+      b.onclick=function(){
+        [$g('scgRoleEdit'),$g('scgRoleView')].forEach(function(x){ x.classList.toggle('on', x===b); });
+        $g('scgRoleNote').textContent = roleNotes[b.dataset.role];
+        $g('scgPass').placeholder = b.dataset.role==='view' ? '타팀 전용 비밀번호' : '기획1팀 전용 비밀번호';
+        $g('scgPass').focus();
+      };
+    });
     var go=function(){
       var nm=$g('scgName').value.trim(), pw=$g('scgPass').value;
       if(!nm){ $g('scgErr').textContent='이름을 입력해 주세요.'; $g('scgName').focus(); return; }
@@ -1686,7 +2099,7 @@ function rememberedPass(){ try{ return localStorage.getItem('sc-pass-'+BOARD)||s
 function join(pw, remember){
   return rpc('sc_join', {p_board:BOARD, p_pass:pw, p_actor:SC.me.id, p_name:SC.me.name||'익명'})
     .then(function(r){
-      SC.pass=pw; SC.on=true; SC.mode='sync'; SC.title=r.title||'';
+      SC.pass=pw; SC.on=true; SC.mode='sync'; SC.title=r.title||''; SC.role=r.role||'edit';
       try{
         if(remember) localStorage.setItem('sc-pass-'+BOARD, pw);
         else { localStorage.removeItem('sc-pass-'+BOARD); sessionStorage.setItem('sc-pass-'+BOARD, pw); }
@@ -1697,26 +2110,29 @@ function join(pw, remember){
       SC.snapSeq = r.snap_seq || 0;
       var d = SC.base ? {products:clone(SC.base.products||[]), adopted:clone(SC.base.adopted||{}),
                          majors:clone(SC.base.majors||DEF_MAJORS), minors:clone(SC.base.minors||DEF_MINORS),
-                         special:Object.assign(clone(DEF_SPECIAL), SC.base.special||{})}
+                         special:Object.assign(clone(DEF_SPECIAL), SC.base.special||{}),
+                         parked:clone(SC.base.parked||[]), imgBank:clone(SC.base.imgBank||[])}
                       : (function(){ var e=emptyDoc(); apply({t:'reset'}, e); return e; })();
       SC.hist=[];
       (r.ops||[]).forEach(function(h){ apply(h.op, d); SC.hist.push(h); SC.seq=Math.max(SC.seq,h.seq); });
       SC.seq = Math.max(SC.seq, r.seq||0);
       state.products=d.products; state.adopted=d.adopted;
       state.majors=d.majors; state.minors=d.minors; state.special=d.special;
+      state.parked=d.parked||[]; state.imgBank=d.imgBank||[];
       state.pop=null; state.editTab=null;
+      if(SC.role==='view' && state.level==='plan'){ state.level='major'; state.key='all'; }
 
       /* 서버가 완전히 빈 보드면 내 초기 라인업을 한 번 올려 기준을 만든다 */
       if(!r.snap && !(r.ops||[]).length){
         var init=emptyDoc(); apply({t:'reset'}, init);
-        state.products=init.products; state.adopted=init.adopted;
+        state.products=init.products; state.adopted=init.adopted; state.parked=init.parked; state.imgBank=init.imgBank;
         SC.queue.push({t:'snap', d:docSnap(state), why:'초기 라인업 등록'});
         scheduleFlush();
       }
 
-      /* 이전에 못 보낸 변경이 보관돼 있으면 이어서 올립니다 */
+      /* 이전에 못 보낸 변경이 보관돼 있으면 이어서 올립니다 (조회 전용 로그인에서는 보류) */
       SC.reauthing = false;
-      var kept = loadQueue();
+      var kept = SC.role==='view' ? [] : loadQueue();
       if(kept.length){
         var have = {};
         SC.queue.forEach(function(q){ have[JSON.stringify(q)]=1; });
@@ -1729,19 +2145,24 @@ function join(pw, remember){
 
       document.body.classList.add('sc-live');
       var hb=document.getElementById('scHistBtn'); if(hb) hb.style.display='';
+      applyRoleChrome();
       render(); renderPeers(); setConn('on');
+      maybeCompact();
       wsConnect(); startPoll(); beat();
       beatT=setInterval(beat, 3000);
       setInterval(function(){ if(SC.on && !SC.wsOK) pull(); }, 2000);
-      toast('<b>'+esc(SC.me.name)+'</b>님으로 입장했습니다. 이제 변경이 모두에게 실시간으로 반영됩니다.', true);
+      toast(SC.role==='view'
+        ? '<b>'+esc(SC.me.name)+'</b>님으로 입장했습니다. <b>조회 전용</b> 모드라 수정은 할 수 없습니다.'
+        : '<b>'+esc(SC.me.name)+'</b>님으로 입장했습니다. 이제 변경이 모두에게 실시간으로 반영됩니다.', true);
       setSaveUI('', '서버 동기화');
     });
 }
 function soloMode(){
-  SC.on=false; SC.mode='solo'; setConn('off', true);
+  SC.on=false; SC.mode='solo'; SC.role='edit'; setConn('off', true);
   document.body.classList.remove('sc-live');
   var hb=document.getElementById('scHistBtn'); if(hb) hb.style.display='none';
   var pv=document.getElementById('scPeers'); if(pv) pv.innerHTML='';
+  applyRoleChrome();
   restore(); render(); save(true);
 }
 window.addEventListener('beforeunload', function(e){
