@@ -347,6 +347,21 @@ textarea.nm:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-s
 .dlink:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
 .dlink.off{opacity:.45;pointer-events:none}
 .specnote{font-size:10.5px;color:var(--ink-3);margin-top:7px;line-height:1.5}
+
+/* ---------- 발주 상태 ---------- */
+.slot.st-none{opacity:.42}
+.slot.st-none .thumb img{filter:grayscale(1)}
+.slot.st-none .name{color:var(--ink-3)}
+.slot.st-none:hover{opacity:.8}
+.stbadge{position:absolute;top:7px;left:7px;z-index:3;font-size:9.5px;font-weight:800;padding:3px 8px;
+  border-radius:999px;letter-spacing:.2px;color:#fff;box-shadow:0 1px 3px rgba(16,24,40,.22);pointer-events:none}
+.stbadge.none{background:#8A939E}
+.stbadge.pre{background:#E0A11B}
+.stbadge.in{background:#0E9F6E}
+.opt.on.o-none{background:#8A939E;border-color:#8A939E;color:#fff}
+.opt.on.o-pre{background:#E0A11B;border-color:#E0A11B;color:#fff}
+.opt.on.o-in{background:#0E9F6E;border-color:#0E9F6E;color:#fff}
+.stat.k-unordered b{color:#8A939E}
 </style>
 </head>
 <body>
@@ -530,6 +545,13 @@ function findSpec(p){
   }
   return SPECS.find(s=>(s.ids||[]).includes(p.id)) || null;
 }
+const ORDER_ST = [
+  {k:'none', label:'미발주'},
+  {k:'pre',  label:'입고전'},
+  {k:'in',   label:'입고완료'}
+];
+function stOf(p){ return ORDER_ST.find(s=>s.k===p.st) || null; }
+
 function specOf(p){
   const s = findSpec(p) || {};
   const pick = (a,b)=> (a!==undefined && a!==null) ? a : (b||'');
@@ -735,7 +757,8 @@ function renderStats(){
   const kc = {wash:'k-wash', protect:'k-protect', store:'k-store'};
   const rows=[['총 제품 슬롯', p.length, '']]
     .concat(state.majors.map(m=>[m.label, p.filter(x=>x.major===m.id).length, kc[m.id]||'']))
-    .concat([[tabLabel('special','none')+' 소분류', p.filter(x=>!x.minor).length, '']]);
+    .concat([[tabLabel('special','none')+' 소분류', p.filter(x=>!x.minor).length, ''],
+             ['미발주', p.filter(x=>x.st==='none').length, 'k-unordered']]);
   $('#stats').innerHTML = rows.map(r=>`<div class="stat ${r[2]}"><b>${r[1]}</b><span>${r[0]}</span></div>`).join('');
 }
 function tabEl(kind, id, cls, count, lv, key){
@@ -781,11 +804,13 @@ function renderTabs(){
 function slotHTML(p){
   const sel = state.pasteTarget===p.id ? ' sel':'';
   const ro = isViewOnly();
-  return `<div class="slot${sel}" data-id="${p.id}" draggable="${ro?'false':'true'}">
+  const st = stOf(p);
+  return `<div class="slot${sel}${st?' st-'+st.k:''}" data-id="${p.id}" draggable="${ro?'false':'true'}">
     <button class="thumb" data-act="pop" data-id="${p.id}" title="${ro?'클릭: 상세 보기':'클릭: 편집 / 드래그: 순서·카테고리 이동'}">
       <img src="${p.img}" alt="" draggable="false">
       <span class="ov"><span>${ro?'클릭 → 상세 보기':'클릭 → 이미지 교체 · 이동'}</span>${ro?'':'<span class="k">드래그 → 순서 변경</span>'}</span>
     </button>
+    ${st?`<span class="stbadge ${st.k}">${st.label}</span>`:''}
     <div class="name" ${ro?'':'contenteditable="plaintext-only"'} data-id="${p.id}" spellcheck="false" draggable="false">${esc(p.name)}</div>
     <div class="chips">
       <span class="chip ${p.major}">${mLabel(p.major)}</span>
@@ -891,6 +916,10 @@ function renderPop(){
       <div class="row">${p.minor?`<span class="chip minor">${nLabel(p.minor)}</span>`:`<span class="chip none">${esc(tabLabel('special','none'))}</span>`}</div>
     </div>
     <div class="grp">
+      <div class="lb">발주 상태</div>
+      <div class="row">${(()=>{const x=stOf(p);return x?`<span class="chip" style="background:${{none:'#8A939E',pre:'#E0A11B',in:'#0E9F6E'}[x.k]};color:#fff">${x.label}</span>`:'<span class="chip none">미지정</span>';})()}</div>
+    </div>
+    <div class="grp">
       <div class="lb">제품 정보 <i>다우오피스 기준</i></div>
       <div class="spec">
         <div><div class="k">제조국</div><div class="v">${esc(sp.o)||'—'}</div></div>
@@ -914,6 +943,13 @@ function renderPop(){
       </div>
       ${specLinksHTML(sp)}
       <div class="specnote">${sp.post?'':'이 제품은 아직 다우 게시판에 등록된 글이 없습니다. '}값을 고치면 모두에게 함께 반영됩니다.</div>
+    </div>
+    <div class="grp">
+      <div class="lb">발주 상태 <i>기획1팀 전용</i></div>
+      <div class="row">
+        ${ORDER_ST.map(x=>`<button class="opt o-${x.k} ${p.st===x.k?'on':''}" data-act="mv-st" data-v="${x.k}">${x.label}</button>`).join('')}
+        <button class="opt ${!p.st?'on':''}" data-act="mv-st" data-v="">표시 안 함</button>
+      </div>
     </div>
     <div class="grp">
       <div class="lb">썸네일 이미지 교체 <i>Ctrl+V</i></div>
@@ -1128,6 +1164,11 @@ document.addEventListener('click', e=>{
                        emit({t:'mv', pid:p.id, minor:v}, {noRender:true});
                        toast(v?`소분류를 <b>${nLabel(v)}</b>로 이동했습니다.`:'소분류를 미지정으로 되돌렸습니다.', !!v);
                        if(state.level==='minor'){ state.key = v || 'none'; } render(); } break; }
+    case 'mv-st': { const p=byId(state.pop); if(p){ const v=t.dataset.v||null;
+                      emit({t:'st', pid:p.id, v:v}, {noRender:true});
+                      const lb=(ORDER_ST.find(x=>x.k===v)||{}).label;
+                      toast(v?`발주 상태를 <b>${lb}</b>로 바꿨습니다.`:'발주 상태 표시를 껐습니다.', !!v);
+                      render(); } break; }
     case 'del': { const p=byId(t.dataset.id); if(p && confirmDel(p)){
                   emit({t:'del', pid:p.id}, {noRender:true});
                   state.pop=null; state.pasteTarget=null; render(); toast('슬롯을 삭제했습니다.'); } break; }
@@ -1557,6 +1598,7 @@ function apply(op, d){
     }
     case 'name': { var p2=find(op.pid); if(p2) p2.name=op.name; break; }
     case 'meta': { var pm=find(op.pid); if(pm && /^m_[ovc]$/.test(op.k)) pm[op.k]=op.v; break; }
+    case 'st':   { var ps=find(op.pid); if(ps) ps.st = op.v || null; break; }
     case 'img':  { var p3=find(op.pid); if(p3) p3.img=op.img; break; }
     case 'add':  { if(!find(op.p.id)) d.products.push(clone(op.p)); break; }
     case 'del': {
@@ -1852,6 +1894,7 @@ function opText(op){
     case 'ord':     return pn(op.pid)+' 순서 변경';
     case 'name':    return pn(op.pid)+' 제품명 수정';
     case 'meta':    return pn(op.pid)+' '+({m_o:'제조국',m_v:'용량',m_c:'인증'}[op.k]||'정보')+' 수정';
+    case 'st':      return pn(op.pid)+' 발주 상태 → '+(((ORDER_ST.find(x=>x.k===op.v)||{}).label)||'표시 안 함');
     case 'img':     return pn(op.pid)+' 이미지 교체';
     case 'add':     return '슬롯 추가';
     case 'del':     return '슬롯 삭제';
