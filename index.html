@@ -346,13 +346,15 @@ textarea.nm:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-s
   font-weight:800;color:var(--ink-2);text-decoration:none;background:#fff;white-space:nowrap}
 .dlink:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
 .dlink.off{opacity:.45;pointer-events:none}
+.dlink.cert{border-color:var(--accent-line);background:var(--accent-soft);color:var(--accent)}
+.dlink.cert:hover{background:var(--accent);border-color:var(--accent);color:#fff}
 .specnote{font-size:10.5px;color:var(--ink-3);margin-top:7px;line-height:1.5}
 
 /* ---------- 발주 상태 ---------- */
-.slot.st-none{opacity:.42}
+.slot.st-none{opacity:.7}
 .slot.st-none .thumb img{filter:grayscale(1)}
 .slot.st-none .name{color:var(--ink-3)}
-.slot.st-none:hover{opacity:.8}
+.slot.st-none:hover{opacity:.95}
 .stbadge{position:absolute;top:7px;left:7px;z-index:3;font-size:9.5px;font-weight:800;padding:3px 8px;
   border-radius:999px;letter-spacing:.2px;color:#fff;box-shadow:0 1px 3px rgba(16,24,40,.22);pointer-events:none}
 .stbadge.none{background:#8A939E}
@@ -504,19 +506,19 @@ const DAOU_BOARD = 'https://selfdiylab.daouoffice.com/gw/app/board/1526051924171
 const DAOU_CERT  = 'https://selfdiylab.daouoffice.com/drive/app/company-drive/1525192959480307713/1526066751324852224';
 const SPECS = [
  {n:'패딩 볼륨 복원 전용 세제', alias:['패딩 세정 볼륨 복원 세제'], ids:['p1'],
-  o:'국내', v:'1,000ml', c:'EB26-03-0039호', cert:1, post:'1546459302603231232'},
+  o:'국내', v:'1,000ml', c:'EB26-03-0039호', cert:1, post:'1546459302603231232', ca:'1561679095966994433'},
  {n:'악취 재발 방지 섬유유연제', ids:['p2'],
   o:'국내', v:'1,000ml', c:'생활화학신고 진행 중 (완료 후 업데이트 예정)', cert:0, post:'1546474657803210752'},
  {n:'청데님 컬러 보존 전용세제', alias:['데님 컬러 보존 전용세제','청데님 컬러락 전용세제'], ids:['p3'],
-  o:'중국', v:'400g', c:'KOTITI 안전확인대상생활화학제품 HA26-03-0023', cert:1, post:'1543928402971570176'},
+  o:'중국', v:'400g', c:'KOTITI 안전확인대상생활화학제품 HA26-03-0023', cert:1, post:'1543928402971570176', ca:'1543928402975764483'},
  {n:'컬러의류 기름&얼룩제거 전용 표백제', ids:['p4'],
-  o:'중국', v:'500g', c:'KOTITI 안전확인대상생활화학제품 HB26-04-0005', cert:1, post:'1545258045464924160'},
+  o:'중국', v:'500g', c:'KOTITI 안전확인대상생활화학제품 HB26-04-0005', cert:1, post:'1545258045464924160', ca:'1545258045464924161'},
  {n:'향기 더블 부스터', alias:['향기 더블 부스터 꽃집 파우더'], ids:['p5'],
-  o:'중국', v:'250g', c:'안전기준 적합확인 신고증명서', cert:1, post:'1531532658612568064'},
+  o:'중국', v:'250g', c:'안전기준 적합확인 신고증명서', cert:1, post:'1531532658612568064', ca:'1531532658612568064'},
  {n:'기름&얼룩 오염 분해 세탁 스프레이', ids:['p6'],
-  o:'중국', v:'300ml', c:'안전기준 적합확인 신고증명서', cert:1, post:'1539456063869329408'},
+  o:'중국', v:'300ml', c:'안전기준 적합확인 신고증명서', cert:1, post:'1539456063869329408', ca:'1539456063873523712'},
  {n:'노불림 세탁조 클리너', ids:['p7'],
-  o:'중국', v:'100g × 6개입', c:'안전확인대상생활화학제품 확인 결과서', cert:1, post:'1526064939427450880'},
+  o:'중국', v:'100g × 6개입', c:'안전확인대상생활화학제품 확인 결과서', cert:1, post:'1526064939427450880', ca:'1526064939427450880'},
  {n:'뉴질랜드 섬유복원 양모볼', ids:['p8'],
   o:'중국(OEM) · 양모 뉴질랜드산 100%', v:'지름 6cm (±0.5cm)', c:'해당 없음 (상품 소싱)', cert:0, post:'1528596831016312832'},
  {n:'청바지 변형·손상방지 세탁망', ids:['p9'],
@@ -555,12 +557,17 @@ function stOf(p){ return ORDER_ST.find(s=>s.k===p.st) || null; }
 function specOf(p){
   const s = findSpec(p) || {};
   const pick = (a,b)=> (a!==undefined && a!==null) ? a : (b||'');
-  return {o:pick(p.m_o,s.o), v:pick(p.m_v,s.v), c:pick(p.m_c,s.c), cert:!!s.cert, post:s.post||null};
+  const dl = (s.post && s.ca)
+    ? 'https://selfdiylab.daouoffice.com/gw/api/board/1526051924171026432/post/'+s.post+'/attaches/'+s.ca
+    : null;
+  return {o:pick(p.m_o,s.o), v:pick(p.m_v,s.v), c:pick(p.m_c,s.c), cert:!!s.cert, post:s.post||null, dl:dl};
 }
 function specLinksHTML(sp){
   return `<div class="row lnk">
     <a class="dlink ${sp.post?'':'off'}" target="_blank" rel="noopener" href="${sp.post?(DAOU_BOARD+'/post/'+sp.post):'#'}">다우 게시글 열기</a>
-    <a class="dlink ${sp.cert?'':'off'}" target="_blank" rel="noopener" href="${DAOU_CERT}">인증서 폴더</a>
+    ${sp.dl
+      ? `<a class="dlink cert" href="${sp.dl}" target="_blank" rel="noopener" title="생활화학제품 인증서 PDF를 내려받습니다">⤓ 인증서 다운로드</a>`
+      : `<a class="dlink off" title="등록된 인증서 파일이 없습니다">인증서 없음</a>`}
   </div>`;
 }
 
